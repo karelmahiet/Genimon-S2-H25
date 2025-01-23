@@ -14,9 +14,11 @@ public:
 	void capture();
 	string nom;
 	int balles;
-	int chance;
+	int a_nom();
+	int c_nom();
 protected:
-
+	int n_genimon;
+	int chance;
 };
 
 #endif

@@ -9,6 +9,7 @@ Genimon::Genimon() {
     balles = 5;
     srand(time(0));
     int random = rand() % 8;
+    n_genimon = random;
     if (random == 0) {
         nom = "Alexis";
     }
@@ -39,11 +40,19 @@ void Genimon::apparait() {
     cout << endl << "-----Un " << nom << " sauvage apparait!-----" << endl << endl;
 }
 
+int Genimon::a_nom() {
+    return n_genimon;
+}
+
+int Genimon::c_nom() {
+    return chance;
+}
+
 void Genimon::capture() {
     int random = 0;
     if (balles <= 0) {
         cout << "Nombre de balles insuffisantes" << endl;
-        cout << nom << " s'est échappé..." << endl;
+        cout << nom << " s'est echappe..." << endl;
         cout << endl << "-----Fin du combat-----" << endl << endl;
     }
     else if (balles > 0) {
@@ -52,7 +61,7 @@ void Genimon::capture() {
         char question;
         cin >> question;
         if (question == 'y' || question == 'Y') {
-            cout << "balle lancée!" << endl;
+            cout << "balle lancee!" << endl;
             balles--;
             srand(time(0));
             random = rand() % 8;
@@ -68,7 +77,7 @@ void Genimon::capture() {
                     random = rand() % 8;
                     if (random == 1 || random == 2 || random == 3 || random == 4) {
                         std::this_thread::sleep_for(std::chrono::seconds(1));
-                        cout << nom << " capturé!" << endl;
+                        cout << nom << " capture!" << endl;
                         chance = 1;
                         cout << endl << "-----Fin du combat-----" << endl << endl;
                     }
