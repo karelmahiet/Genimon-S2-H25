@@ -1,6 +1,4 @@
-//#include "genimon.h" marche pas?? donc jai include mon path, devrait pas marche pour vous
-//le genimon.h est dans le teams dans le code d'alexis
-#include "D:\download\OneDrive_2025-01-23\Genimon (Capture+deplacement)\genimon.h"
+#include "genimon.h"
 #include <random>
 #include <iostream>
 #include <thread> // Pour sleep_for
