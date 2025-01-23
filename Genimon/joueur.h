@@ -4,6 +4,10 @@
 #include <iostream>
 #include <ctime>
 #include "genimon.h"
+#include <thread>
+#include <chrono>
+#include <conio.h>
+#include <cstdlib>
 using namespace std;
 
 class Joueur {
