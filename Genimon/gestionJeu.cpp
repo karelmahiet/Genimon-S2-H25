@@ -2,7 +2,7 @@
 
 enum Etat
 {
-    Initialise, GeniDex, EnCours, EnPause, Termine
+    Initialise, EnCours, EnPause, Termine
 };
 
 enum Etat etatJeu = Initialise;
@@ -79,7 +79,71 @@ void gererConfirmation(int option)
 
 }
 
-void gererClavier()
+void gererGeniedex()
+{
+    #ifdef _WIN32
+        system("cls");
+    #endif
+    bool operationFinie = false;
+    joueur.afficherMenuGeniedex();
+    while (!operationFinie)
+    {
+        char touche = _getch();
+
+        if (touche == 'v' || touche == 'V')
+        {
+            #ifdef _WIN32
+                   system("cls");
+            #endif
+            joueur.afficherMenuGeniedex();
+            cout << "Entrer le type de Genimon que vous voulez visualiser (8 choix)" << endl;
+            cout << "Informatique: --I--\nElectrique: --E--\nRobotique: --R--\nMecanique: --M--\n";
+            cout << "Civil: --C--\nBatiment: --B--\nBiotech: --T--\nChimique: --Q--\n" << endl;
+
+            char toucheSecondaire;
+            bool toucheValide = false;
+
+            while (!toucheValide)
+            {
+                cout << "Votre selection: ";
+                toucheSecondaire = _getch();
+
+                if (toucheSecondaire == 'i' || toucheSecondaire == 'I' || toucheSecondaire == 'e' || toucheSecondaire == 'E'
+                    || toucheSecondaire == 'r' || toucheSecondaire == 'R' || toucheSecondaire == 'm' || toucheSecondaire == 'M'
+                    || toucheSecondaire == 'c' || toucheSecondaire == 'C' || toucheSecondaire == 'b' || toucheSecondaire == 'B'
+                    || toucheSecondaire == 't' || toucheSecondaire == 'T' || toucheSecondaire == 'q' || toucheSecondaire == 'Q')
+                {
+                    toucheValide = true;
+                }
+                else
+                {
+                    cout << "Touche invalide" << endl;
+                }
+            }
+
+            cout << toucheSecondaire << endl;
+            joueur.consulterGenidexPartiel(toucheSecondaire);
+        }
+        else if (touche == 'e' || touche == 'E')
+        {
+            #ifdef _WIN32
+                    system("cls");
+            #endif
+            joueur.afficherMenuGeniedex();
+            joueur.consulterGenidexComplet();
+        }
+        else if (touche == 'f' || touche == 'F')
+        {
+            operationFinie = true;
+        }
+        else
+        {
+            cout << "Touche invalide" << endl;
+        }
+    }
+}
+
+void gererPartie()
 {
     if (_kbhit()) {
         char touche = _getch();
@@ -97,7 +161,7 @@ void gererClavier()
             joueur.position_y++;
         }
         else if (touche == 'g' || touche == 'G') {
-            joueur.consultegenidex();
+            gererGeniedex();
         }
         else if (touche == ' ') {
             //etatJeu = EnPause;
@@ -160,15 +224,12 @@ int main() {
                 gererInitialisation();
             }
             break;
-        case GeniDex:
-            // À implémener
-            break;
         case EnCours:
             joueur.afficherPartie();
             enDécision = true;
             while (enDécision)
             {
-                gererClavier();
+                gererPartie();
             }
             break;
         case EnPause:

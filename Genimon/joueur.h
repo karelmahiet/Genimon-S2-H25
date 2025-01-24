@@ -14,11 +14,13 @@ class Joueur {
 public:
 	Joueur(int x0 = 4, int y0 = 5);
 	void afficherPartie();
-	void afficherMenu();
+	void afficherMenuPrincipal();
+	void afficherMenuGeniedex();
 	void capture();
 	void creerTerrain();
 	void initialiserPosition(int x0, int y0);
-	void consultegenidex();
+	void consulterGenidexPartiel(char type);
+	void consulterGenidexComplet();
 	void gererGenimon();
 	bool estSurGeniMon();
 	int position_x;

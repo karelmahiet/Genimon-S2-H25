@@ -58,8 +58,7 @@ void Genimon::capture() {
     else if (balles > 0) {
         cout << "Nombre de balles restantes: " << balles << endl;
         cout << "Voulez-vous le capturer? (O/N)" << endl;
-        char question;
-        cin >> question;
+        char question = _getch();
         if (question == 'o' || question == 'O') {
             cout << "balle lancee!" << endl;
             balles--;
