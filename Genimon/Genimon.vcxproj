@@ -129,12 +129,11 @@
   <ItemGroup>
     <ClCompile Include="genimon.cpp" />
     <ClCompile Include="joueur.cpp" />
-    <ClCompile Include="test.cpp" />
+    <ClCompile Include="gestionJeu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="genimon.h" />
     <ClInclude Include="joueur.h" />
-    <ClInclude Include="test.h" />
     <ClInclude Include="unistd.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

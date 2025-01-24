@@ -32,7 +32,7 @@ Genimon::Genimon() {
         nom = "Darnley";
     }
     else if (random == 7) {
-        nom = "Jérémie";
+        nom = "Jeremie";
     }
 }
 
@@ -57,10 +57,10 @@ void Genimon::capture() {
     }
     else if (balles > 0) {
         cout << "Nombre de balles restantes: " << balles << endl;
-        cout << "Voulez-vous le capturer? (Y/N)" << endl;
+        cout << "Voulez-vous le capturer? (O/N)" << endl;
         char question;
         cin >> question;
-        if (question == 'y' || question == 'Y') {
+        if (question == 'o' || question == 'O') {
             cout << "balle lancee!" << endl;
             balles--;
             srand(time(0));
@@ -85,14 +85,14 @@ void Genimon::capture() {
             }
             if (chance != 1) {
                 std::this_thread::sleep_for(std::chrono::seconds(1));
-                cout << nom << " s'est échappé de la balle..." << endl;
+                cout << nom << " s'est echappe de la balle..." << endl;
                 cout << endl;
                 capture();
             }
 
         }
         else if (question == 'n' || question == 'N') {
-            cout << nom << " s'est échappé..." << endl;
+            cout << nom << " s'est echappe..." << endl;
             cout << endl << "-----Fin du combat-----" << endl << endl;
         }
     }
