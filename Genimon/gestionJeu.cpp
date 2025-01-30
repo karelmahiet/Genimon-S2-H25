@@ -7,7 +7,6 @@ enum Etat
 
 enum Etat etatJeu = Initialise;
 Joueur joueur;
-bool enDécision;
 
 void afficherBienvenue()
 {
@@ -34,49 +33,72 @@ void afficherConfirmation()
 
 void gererInitialisation()
 {
-    char touche = _getch();
+    #ifdef _WIN32
+        system("cls");
+    #endif
+    afficherBienvenue();
+    bool operationFinie = false;
 
-    if (touche == 'd' || touche == 'D')
+    while (!operationFinie)
     {
-        etatJeu = EnCours;
-        enDécision = false;
-    }
-    else if (touche == 'z' || touche == 'Z')
-    {
-        etatJeu = Termine;
-        enDécision = false;
-    }
-    else
-    {
-        cout << "Touche invalide" << endl;
-    }
-}
+        char touche = _getch();
 
-void gererConfirmation(int option)
-{
-    char touche = _getch();
-
-    if (touche == 'c' || touche == 'C')
-    {
-        if (option == 1)
+        if (touche == 'd' || touche == 'D')
         {
-            etatJeu = Initialise;
+            etatJeu = EnCours;
+            operationFinie = true;
+        }
+        else if (touche == 'z' || touche == 'Z')
+        {
+            etatJeu = Termine;
+            operationFinie = true;
         }
         else
         {
-            etatJeu = Termine;
+            cout << "Touche invalide" << endl;
         }
-        enDécision = false;
     }
-    else if (touche == 'a' || touche == 'A')
-    {
-        enDécision = false;
-    }
-    else
-    {
-        cout << "Touche invalide" << endl;
-    }
+}
 
+void gererConfirmation(int option, bool* finPartie)
+{
+    #ifdef _WIN32
+        system("cls");
+    #endif
+    afficherConfirmation();
+    bool operationFinie = false;
+
+    while (!operationFinie)
+    {
+        char touche = _getch();
+
+        if (touche == 'c' || touche == 'C')
+        {
+            if (option == 1)
+            {
+                etatJeu = Initialise;
+                //Réinitialisation des paramètres du jeu
+                joueur.initialiserPosition(4, 5);
+                joueur.creerTerrain();
+                joueur.reinitialiserGenidex();
+            }
+            else
+            {
+                etatJeu = Termine;
+            }
+            operationFinie = true;
+            *finPartie = true;
+        }
+        else if (touche == 'a' || touche == 'A')
+        {
+            operationFinie = true;
+            *finPartie = true;
+        }
+        else
+        {
+            cout << "Touche invalide" << endl;
+        }
+    }
 }
 
 void gererGeniedex()
@@ -84,13 +106,14 @@ void gererGeniedex()
     #ifdef _WIN32
         system("cls");
     #endif
-    bool operationFinie = false;
     joueur.afficherMenuGeniedex();
+    bool operationFinie = false;
+
     while (!operationFinie)
     {
         char touche = _getch();
 
-        if (touche == 'v' || touche == 'V')
+        if (touche == 'c' || touche == 'C')
         {
             #ifdef _WIN32
                    system("cls");
@@ -145,63 +168,48 @@ void gererGeniedex()
 
 void gererPartie()
 {
-    if (_kbhit()) {
-        char touche = _getch();
+    joueur.afficherPartie();
+    bool operationFinie = false;
 
-        if (touche == 'a' && joueur.position_x > 0) {
-            joueur.position_x--;
-        }
-        else if (touche == 'd' && joueur.position_x < 8) {
-            joueur.position_x++;
-        }
-        else if (touche == 's' && joueur.position_y > 1) {
-            joueur.position_y--;
-        }
-        else if (touche == 'w' && joueur.position_y < 9) {
-            joueur.position_y++;
-        }
-        else if (touche == 'g' || touche == 'G') {
-            gererGeniedex();
-        }
-        else if (touche == ' ') {
-            //etatJeu = EnPause;
-        }
-        else if (touche == 'r' || touche == 'R') {
-            #ifdef _WIN32
-                   system("cls");
-            #endif
-            afficherConfirmation();
-            while (enDécision)
-            {
-                gererConfirmation(1);
-            }
-            if (etatJeu == EnCours) //Si il y a une annulation
-            {
-                enDécision = true;
-            }
-        }
-        else if (touche == 'z' || touche == 'Z') {
-            #ifdef _WIN32
-                   system("cls");
-            #endif
-            afficherConfirmation();
-            while (enDécision)
-            {
-                gererConfirmation(2);
-            }
-            if (etatJeu == EnCours) //Si il y a une annulation
-            {
-                enDécision = true;
-            }
-        }
-
-        if (joueur.estSurGeniMon()) {
-            joueur.gererGenimon();
-        }
-
-        if (etatJeu == EnCours)
+    while (!operationFinie)
+    {
+        if (_kbhit())
         {
-            joueur.afficherPartie();
+            char touche = _getch();
+
+            if (touche == 'a' && joueur.position_x > 0) {
+                joueur.position_x--;
+            }
+            else if (touche == 'd' && joueur.position_x < 8) {
+                joueur.position_x++;
+            }
+            else if (touche == 's' && joueur.position_y > 1) {
+                joueur.position_y--;
+            }
+            else if (touche == 'w' && joueur.position_y < 9) {
+                joueur.position_y++;
+            }
+            else if (touche == 'g' || touche == 'G') {
+                gererGeniedex();
+            }
+            else if (touche == ' ') {
+                //etatJeu = EnPause;
+            }
+            else if (touche == 'r' || touche == 'R') {
+                gererConfirmation(1, &operationFinie);
+            }
+            else if (touche == 'z' || touche == 'Z') {
+                gererConfirmation(2, &operationFinie);
+            }
+
+            if (joueur.estSurGenimon()) {
+                joueur.gererGenimon();
+            }
+
+            if (etatJeu == EnCours)
+            {
+                joueur.afficherPartie();
+            }
         }
     }
 }
@@ -212,25 +220,10 @@ int main() {
         switch (etatJeu)
         {
         case Initialise:
-            #ifdef _WIN32
-                   system("cls");
-            #endif
-            afficherBienvenue();
-            enDécision = true;
-            joueur.initialiserPosition(4, 5); //Si il y a une réinitialisation
-            joueur.creerTerrain(); //Si il y a une réinitialisation
-            while (enDécision)
-            {
-                gererInitialisation();
-            }
+            gererInitialisation();
             break;
         case EnCours:
-            joueur.afficherPartie();
-            enDécision = true;
-            while (enDécision)
-            {
-                gererPartie();
-            }
+            gererPartie();
             break;
         case EnPause:
             // À implémenter

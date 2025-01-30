@@ -25,7 +25,17 @@ void Joueur::creerTerrain()
     terrain[position_x][position_y] = 1;
 }
 
-bool Joueur::estSurGeniMon()
+void Joueur::reinitialiserGenidex()
+{
+    for (int i = 0; i < 8; i++)
+    {
+        genidex[i].nbGenimonRencontré = 0;
+        genidex[i].nbGenimonAttrapés = 0;
+        genidex[i].listeGenimonRencontré.clear();
+    }
+}
+
+bool Joueur::estSurGenimon()
 {
     return terrain[position_x][position_y] == 2;
 }
@@ -36,26 +46,23 @@ void Joueur::gererGenimon()
         system("cls");
     #endif
     cout << "----------------------------------------------------------------------------------" << endl;
-    cout << "                               Duel contre un GeniMon !                           " << endl << endl;
+    cout << "                               Duel contre un Genimon !                           " << endl << endl;
     cout << "                         Vous avez 5 chances pour l'attraper                      " << endl << endl;
     cout << "----------------------------------------------------------------------------------" << endl;
 
-    Genimon genimon1;
-    genimon1.apparait();
-    a_genimon = genimon1.a_nom();
-    if (a_genimon == 0) { a_genidex[0]++; }
-    if (a_genimon == 1) { a_genidex[1]++; }
-    if (a_genimon == 2) { a_genidex[2]++; }
-    if (a_genimon == 3) { a_genidex[3]++; }
-    if (a_genimon == 4) { a_genidex[4]++; }
-    if (a_genimon == 5) { a_genidex[5]++; }
-    if (a_genimon == 6) { a_genidex[6]++; }
-    if (a_genimon == 7) { a_genidex[7]++; }
-    genimon1.capture();
-    c_genimon = genimon1.c_nom();
-    if (c_genimon == 1)
+    Genimon genimon;
+    genimon.apparait();
+    int typeGenimon = genimon.getTypeNumérique();
+    genidex[typeGenimon].nbGenimonRencontré++;
+    genidex[typeGenimon].listeGenimonRencontré.push_back(genimon);
+
+    genimon.capture();
+    if (genimon.getEtat() == "capture")
     {
-        c_genidex[a_genimon]++;
+        genidex[typeGenimon].nbGenimonAttrapés++;
+        //Réglage de bogue sur l'état
+        int index = genidex[typeGenimon].listeGenimonRencontré.size() - 1;
+        genidex[typeGenimon].listeGenimonRencontré[index].setEtat("capture");
     }
 
     bool retourJeu = false;
@@ -68,6 +75,55 @@ void Joueur::gererGenimon()
         {
             retourJeu = true;
         }
+        else
+        {
+            cout << "Touche invalide" << endl;
+            cout << "Appuyez sur --R-- pour revenir au jeu" << endl;
+        }
+    }
+}
+
+void Joueur::consulterDétailsType(int typeNumérique, string type)
+{
+    int tailleListe = genidex[typeNumérique].listeGenimonRencontré.size();
+    cout << "Details pour le type: " << type << endl;
+
+    if (tailleListe == 0)
+    {
+        cout << "Aucun Genimon pour ce type" << endl;
+    }
+
+    for (int i = 0; i < tailleListe; i++)
+    {
+        cout << i << ") " << "Nom: " << genidex[typeNumérique].listeGenimonRencontré[i].getNom() << "\n   Type: " << genidex[typeNumérique].listeGenimonRencontré[i].getType();
+        cout << "\n   Rarete: " << genidex[typeNumérique].listeGenimonRencontré[i].getRareté() << "\n   Etat: " << genidex[typeNumérique].listeGenimonRencontré[i].getEtat() << endl;
+    }
+
+    cout << endl;
+}
+
+void Joueur::demanderInformationsGenimon(int typeNumérique, string type)
+{
+    cout << "Voulez-vous consulter les informations de chaque Genimon? (O/N)" << endl;
+    bool operationFinie = false;
+
+    while (!operationFinie)
+    {
+        char touche = _getch();
+        if (touche == 'o' || touche == 'O')
+        {
+            consulterDétailsType(typeNumérique, type);
+            operationFinie = true;
+        }
+        else if (touche == 'n' || touche == 'N')
+        {
+            cout << "----Informations non desires----" << endl << endl;
+            operationFinie = true;
+        }
+        else
+        {
+            cout << "Touche invalide" << endl;
+        }
     }
 }
 
@@ -75,70 +131,91 @@ void Joueur::consulterGenidexPartiel(char type)
 {
     if (type == 'i' || type == 'I')
     {
-        cout << "Nombre de Jeremie rencontres: " << a_genidex[7] << endl;
-        cout << "Nombre de Jeremie captures: " << c_genidex[7] << endl;
+        cout << "Nombre de Genimon de type informatique rencontres: " << genidex[0].nbGenimonRencontré << endl;
+        cout << "Nombre de Genimon de type informatique rencontres et captures: " << genidex[0].nbGenimonAttrapés << endl;
+        demanderInformationsGenimon(0, "informatique");
     }
     else if (type == 'e' || type == 'E')
     {
-        cout << "Nombre de Vincent rencontres: " << a_genidex[3] << endl;
-        cout << "Nombre de Vincent captures: " << c_genidex[3] << endl;
+        cout << "Nombre de Genimon de type electrique rencontres: " << genidex[1].nbGenimonRencontré << endl;
+        cout << "Nombre de Genimon de type electrique rencontres et captures: " << genidex[1].nbGenimonAttrapés << endl;
+        demanderInformationsGenimon(1, "electrique");
     }
     else if (type == 'r' || type == 'R')
     {
-        cout << "Nombre de Karel rencontres: " << a_genidex[5] << endl;
-        cout << "Nombre de Karel captures: " << c_genidex[5] << endl;
+        cout << "Nombre de Genimon de type robotique rencontres: " << genidex[2].nbGenimonRencontré << endl;
+        cout << "Nombre de Genimon de type robotique rencontres et captures: " << genidex[2].nbGenimonAttrapés << endl;
+        demanderInformationsGenimon(2, "robotique");
     }
     else if (type == 'm' || type == 'M')
     {
-        cout << "Nombre de Dylan rencontres: " << a_genidex[2] << endl;
-        cout << "Nombre de Dylan captures: " << c_genidex[2] << endl;
+        cout << "Nombre de Genimon de type mecanique rencontres: " << genidex[3].nbGenimonRencontré << endl;
+        cout << "Nombre de Genimon de type mecanique rencontres et captures: " << genidex[3].nbGenimonAttrapés << endl;
+        demanderInformationsGenimon(3, "mecanique");
     }
     else if (type == 'c' || type == 'C')
     {
-        cout << "Nombre de Alexis rencontres: " << a_genidex[0] << endl;
-        cout << "Nombre de Alexis captures: " << c_genidex[0] << endl;
+        cout << "Nombre de Genimon de type civil rencontres: " << genidex[4].nbGenimonRencontré << endl;
+        cout << "Nombre de Genimon de type civil rencontres et captures: " << genidex[4].nbGenimonAttrapés << endl;
+        demanderInformationsGenimon(4, "civil");
     }
     else if (type == 'b' || type == 'B')
     {
-        cout << "Nombre de Marek rencontres: " << a_genidex[4] << endl;
-        cout << "Nombre de Marek captures: " << c_genidex[4] << endl;
+        cout << "Nombre de Genimon de type batiment rencontres: " << genidex[5].nbGenimonRencontré << endl;
+        cout << "Nombre de Genimon de type batiment rencontres et captures: " << genidex[5].nbGenimonAttrapés << endl;
+        demanderInformationsGenimon(5, "batiment");
     }
     else if (type == 't' || type == 'T')
     {
-        cout << "Nombre de Florian rencontres: " << a_genidex[1] << endl;
-        cout << "Nombre de Florian captures: " << c_genidex[1] << endl;
+        cout << "Nombre de Genimon de type bioTech rencontres: " << genidex[6].nbGenimonRencontré << endl;
+        cout << "Nombre de Genimon de type bioTech rencontres et captures: " << genidex[6].nbGenimonAttrapés << endl;
+        demanderInformationsGenimon(6, "bioTech");
     }
     else if (type == 'q' || type == 'Q')
     {
-        cout << "Nombre de Darnley rencontres: " << a_genidex[6] << endl;
-        cout << "Nombre de Darnley captures: " << c_genidex[6] << endl;
+        cout << "Nombre de Genimon de type chimique rencontres: " << genidex[7].nbGenimonRencontré << endl;
+        cout << "Nombre de Genimon de type chimique rencontres et captures: " << genidex[7].nbGenimonAttrapés << endl;
+        demanderInformationsGenimon(7, "chimique");
     }
+
+    cout << "Choisissez une option du menu pour lancer une autre recherche ou pour fermer le Genidex" << endl;
 }
 
-void Joueur::consulterGenidexComplet() {
-    cout << "Nombre de Alexis rencontres: " << a_genidex[0] << endl;
-    cout << "Nombre de Alexis captures: " << c_genidex[0] << endl << endl;
+void Joueur::consulterGenidexComplet()
+{
+    cout << "Nombre de Genimon de type informatique rencontres: " << genidex[0].nbGenimonRencontré << endl;
+    cout << "Nombre de Genimon de type informatique rencontres et captures: " << genidex[0].nbGenimonAttrapés << endl;
+    consulterDétailsType(0, "informatique");
+   
+    cout << "Nombre de Genimon de type electrique rencontres: " << genidex[1].nbGenimonRencontré << endl;
+    cout << "Nombre de Genimon de type electrique rencontres et captures: " << genidex[1].nbGenimonAttrapés << endl;
+    consulterDétailsType(1, "electrique");
+    
+    cout << "Nombre de Genimon de type robotique rencontres: " << genidex[2].nbGenimonRencontré << endl;
+    cout << "Nombre de Genimon de type robotique rencontres et captures: " << genidex[2].nbGenimonAttrapés << endl;
+    consulterDétailsType(2, "robotique");
+    
+    cout << "Nombre de Genimon de type mecanique rencontres: " << genidex[3].nbGenimonRencontré << endl;
+    cout << "Nombre de Genimon de type mecanique rencontres et captures: " << genidex[3].nbGenimonAttrapés << endl;
+    consulterDétailsType(3, "mecanique");
+    
+    cout << "Nombre de Genimon de type civil rencontres: " << genidex[4].nbGenimonRencontré << endl;
+    cout << "Nombre de Genimon de type civil rencontres et captures: " << genidex[4].nbGenimonAttrapés << endl;
+    consulterDétailsType(4, "civil");
+    
+    cout << "Nombre de Genimon de type batiment rencontres: " << genidex[5].nbGenimonRencontré << endl;
+    cout << "Nombre de Genimon de type batiment rencontres et captures: " << genidex[5].nbGenimonAttrapés << endl;
+    consulterDétailsType(5, "batiment");
+   
+    cout << "Nombre de Genimon de type bioTech rencontres: " << genidex[6].nbGenimonRencontré << endl;
+    cout << "Nombre de Genimon de type bioTech rencontres et captures: " << genidex[6].nbGenimonAttrapés << endl;
+    consulterDétailsType(6, "bioTech");
+    
+    cout << "Nombre de Genimon de type chimique rencontres: " << genidex[7].nbGenimonRencontré << endl;
+    cout << "Nombre de Genimon de type chimique rencontres et captures: " << genidex[7].nbGenimonAttrapés << endl;
+    consulterDétailsType(7, "chimique");
 
-    cout << "Nombre de Florian rencontres: " << a_genidex[1] << endl;
-    cout << "Nombre de Florian captures: " << c_genidex[1] << endl << endl;
-
-    cout << "Nombre de Dylan rencontres: " << a_genidex[2] << endl;
-    cout << "Nombre de Dylan captures: " << c_genidex[2] << endl << endl;
-
-    cout << "Nombre de Vincent rencontres: " << a_genidex[3] << endl;
-    cout << "Nombre de Vincent captures: " << c_genidex[3] << endl << endl;
-
-    cout << "Nombre de Marek rencontres: " << a_genidex[4] << endl;
-    cout << "Nombre de Marek captures: " << c_genidex[4] << endl << endl;
-
-    cout << "Nombre de Karel rencontres: " << a_genidex[5] << endl;
-    cout << "Nombre de Karel captures: " << c_genidex[5] << endl << endl;
-
-    cout << "Nombre de Darnley rencontres: " << a_genidex[6] << endl;
-    cout << "Nombre de Darnley captures: " << c_genidex[6] << endl << endl;
-
-    cout << "Nombre de Jeremie rencontres: " << a_genidex[7] << endl;
-    cout << "Nombre de Jeremie captures: " << c_genidex[7] << endl << endl;
+    cout << "Choisissez une option du menu pour lancer une autre recherche ou pour fermer le Genidex" << endl;
 }
 
 void Joueur::afficherPartie() {
@@ -181,7 +258,7 @@ void Joueur::afficherMenuGeniedex()
 {
     cout << "----------------------------------------------------------------------------------" << endl;
     cout << "                                  Menu Genidex                                    " << endl << endl;
-    cout << "                      Pour visualiser une categorie du Genidex: --V--             " << endl;
+    cout << "                      Pour visualiser une categorie du Genidex: --C--             " << endl;
     cout << "                      Pour visualiser l'ensemble du Genidex: --E--                " << endl;
     cout << "                      Pour fermer le Genidex: --F--                               " << endl << endl;
     cout << "----------------------------------------------------------------------------------" << endl;
