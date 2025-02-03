@@ -78,7 +78,7 @@ void gererConfirmation(int option, bool* finPartie)
             {
                 etatJeu = Initialise;
                 //Réinitialisation des paramètres du jeu
-                joueur.initialiserPosition(4, 5);
+                joueur.initialiserPosition(10, 10);
                 joueur.creerTerrain();
                 joueur.reinitialiserGenidex();
             }
@@ -170,24 +170,26 @@ void gererPartie()
 {
     joueur.afficherPartie();
     bool operationFinie = false;
+    bool toucheValide = true;
 
     while (!operationFinie)
     {
         if (_kbhit())
         {
             char touche = _getch();
+            toucheValide = true;
 
             if (touche == 'a' && joueur.position_x > 0) {
                 joueur.position_x--;
             }
-            else if (touche == 'd' && joueur.position_x < 8) {
+            else if (touche == 'd' && joueur.position_x < 20) {
                 joueur.position_x++;
             }
-            else if (touche == 's' && joueur.position_y > 1) {
-                joueur.position_y--;
-            }
-            else if (touche == 'w' && joueur.position_y < 9) {
+            else if (touche == 's' && joueur.position_y < 20) {
                 joueur.position_y++;
+            }
+            else if (touche == 'w' && joueur.position_y > 0) {
+                joueur.position_y--;
             }
             else if (touche == 'g' || touche == 'G') {
                 gererGeniedex();
@@ -201,12 +203,16 @@ void gererPartie()
             else if (touche == 'z' || touche == 'Z') {
                 gererConfirmation(2, &operationFinie);
             }
+            else
+            {
+                toucheValide = false;
+            }
 
             if (joueur.estSurGenimon()) {
                 joueur.gererGenimon();
             }
 
-            if (etatJeu == EnCours)
+            if (toucheValide && etatJeu == EnCours)
             {
                 joueur.afficherPartie();
             }

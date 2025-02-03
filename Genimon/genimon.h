@@ -27,7 +27,6 @@ public:
 private:
 	string nom;
 	string rareté;
-	int raretéNumérique;
 	string type;
 	int typeNumérique;
 	int nbBalle;

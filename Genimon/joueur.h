@@ -9,8 +9,9 @@
 #include <chrono>
 #include <conio.h>
 #include <cstdlib>
-#include <Windows.h>
 using namespace std;
+
+#define dimensionTerrain 21
 
 struct caseGenidex
 {
@@ -21,7 +22,7 @@ struct caseGenidex
 
 class Joueur {
 public:
-	Joueur(int x0 = 4, int y0 = 5);
+	Joueur(int x0 = 10, int y0 = 10);
 	void afficherPartie();
 	void afficherMenuPrincipal();
 	void afficherMenuGeniedex();
@@ -36,8 +37,10 @@ public:
 	bool estSurGenimon();
 	int position_x;
 	int position_y;
+	int anciennePosition_x;
+	int anciennePosition_y;
 private:
-	int terrain[9][9];
+	char terrain[dimensionTerrain][dimensionTerrain];
 	caseGenidex genidex[8];
 };
 

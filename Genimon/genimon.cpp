@@ -47,29 +47,30 @@ void Genimon::setRareté()
 {
     srand(time(0));
     int random = rand() % 100;
-    if (random >= 0 && random < 40)
+    if (random >= 0 && random < 50)
     {
         rareté = "COMMUN";
-        raretéNumérique = 0;
         facteurChance = 4;
     }
-    else if (random >= 40 && random < 70)
+    else if (random >= 50 && random < 80)
     {
         rareté = "RARE";
-        raretéNumérique = 1;
         facteurChance = 2;
     }
-    else if (random >= 70 && random < 90)
+    else if (random >= 80 && random < 95)
     {
         rareté = "EPIQUE";
-        raretéNumérique = 2;
-        facteurChance = 0;
+        facteurChance = 1;
     }
-    else if (random >= 90 && random < 100)
+    else if (random >= 95 && random < 99)
     {
         rareté = "!! LEGENDAIRE !!";
-        raretéNumérique = 3;
-        facteurChance = -2;
+        facteurChance = 0;
+    }
+    else if (random == 99)
+    {
+        rareté = "*** SECRET ***";
+        facteurChance = 0;
     }
 }
 

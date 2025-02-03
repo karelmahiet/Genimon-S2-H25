@@ -9,20 +9,26 @@ void Joueur::initialiserPosition(int x0, int y0)
 {
     position_x = x0;
     position_y = y0;
+    anciennePosition_x = x0;
+    anciennePosition_y = y0;
 }
 
 void Joueur::creerTerrain()
 {
     srand(time(0));
-    for (int y = 9; y > 0; y--) {
-        for (int x = 0; x < 9; x++) {
-            terrain[x][y] = 0;
-            if ((rand() % 10) == 1) {
-                terrain[x][y] = 2;
+    for (int y = 0; y < dimensionTerrain; y++) {
+        for (int x = 0; x < dimensionTerrain; x++) {
+            terrain[x][y] = '.';
+            if ((rand() % 20) == 1) {
+                terrain[x][y] = '2';
+            }
+            if (x == 20 && (y == 11 || y == 10 || y == 9))
+            {
+                terrain[x][y] = 'X';
             }
         }
     }
-    terrain[position_x][position_y] = 1;
+    terrain[position_x][position_y] = '1';
 }
 
 void Joueur::reinitialiserGenidex()
@@ -37,7 +43,7 @@ void Joueur::reinitialiserGenidex()
 
 bool Joueur::estSurGenimon()
 {
-    return terrain[position_x][position_y] == 2;
+    return terrain[position_x][position_y] == '2';
 }
 
 void Joueur::gererGenimon()
@@ -225,20 +231,20 @@ void Joueur::afficherPartie() {
 
     afficherMenuPrincipal();
 
-    for (int y = 9; y > 0; y--) {
-        for (int x = 0; x < 9; x++) {
-            if (terrain[x][y] == 1) {
-                terrain[x][y] = 0;
-            }
-        }
-    }
-    terrain[position_x][position_y] = 1;
+    cout << "\n         Exterieur de la faculte" << endl << endl;
 
-    for (int y = 9; y > 0; y--) {
-        for (int x = 0; x < 9; x++) {
-            std::cout << terrain[x][y] << " ";
+    //Mise à jour de la position
+    terrain[anciennePosition_x][anciennePosition_y] = '.';
+    terrain[position_x][position_y] = '1';
+    anciennePosition_x = position_x;
+    anciennePosition_y = position_y;
+
+    //Affichage du terrain
+    for (int y = 0; y < dimensionTerrain; y++) {
+        for (int x = 0; x < dimensionTerrain; x++) {
+            cout << terrain[x][y] << " ";
         }
-        std::cout << std::endl;
+        cout << endl;
     }
 }
 
