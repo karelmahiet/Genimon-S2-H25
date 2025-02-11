@@ -12,7 +12,8 @@
 #include <Windows.h>
 using namespace std;
 
-class Genimon {
+class Genimon
+{
 public:
 	Genimon();
 	void apparait();
@@ -24,6 +25,8 @@ public:
 	string getRareté();
 	string getEtat();
 	void setEtat(string nouvelÉtat);
+	int position_x;
+	int position_y;
 private:
 	string nom;
 	string rareté;

@@ -6,42 +6,59 @@
 #include "genimon.h"
 #include <thread>
 #include <vector>
+#include "vecteur.h"
 #include <chrono>
 #include <conio.h>
 #include <cstdlib>
 using namespace std;
 
-#define dimensionTerrain 21
+#define dimensionTerrain_x 37
+#define dimensionTerrain_y 21
 
 struct caseGenidex
 {
-	int nbGenimonRencontré = 0;
-	int nbGenimonAttrapés = 0;
-	vector<Genimon> listeGenimonRencontré;
+	vector<Genimon> listeGenimonAttrapé;
 };
 
-class Joueur {
+class Joueur
+{
 public:
 	Joueur(int x0 = 10, int y0 = 10);
+	~Joueur();
 	void afficherPartie();
 	void afficherMenuPrincipal();
 	void afficherMenuGeniedex();
 	void creerTerrain();
-	void initialiserPosition(int x0, int y0);
-	void reinitialiserGenidex();
+	void initialiserJoueur(int pos_x, int pos_y);
+	void changerTerrain();
 	void consulterGenidexPartiel(char type);
 	void consulterGenidexComplet();
+	void consulterHistorique();
 	void consulterDétailsType(int typeNumérique, string type);
 	void demanderInformationsGenimon(int typeNumérique, string type);
 	void gererGenimon();
+	void ajouterGenimon(bool refresh);
+	void retirerGenimon(bool refresh);
+	void deplacerGenimons(bool refresh);
 	bool estSurGenimon();
+	bool estSurPorte();
 	int position_x;
 	int position_y;
 	int anciennePosition_x;
 	int anciennePosition_y;
+	Vecteur<Genimon*> listeGenimons;
+
+	//Les bornes sont les valeurs de séparation en entre les deux terrains
+	int borne_x_min;
+	int borne_y_min;
+	int borne_x_max;
+	int borne_y_max;
 private:
-	char terrain[dimensionTerrain][dimensionTerrain];
+	char terrain[dimensionTerrain_x][dimensionTerrain_y];
 	caseGenidex genidex[8];
+	vector<Genimon> historique;
+	string nomTerrain;
+	bool estExterieur;
 };
 
 #endif

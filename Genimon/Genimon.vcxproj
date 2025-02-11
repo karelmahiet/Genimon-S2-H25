@@ -135,6 +135,7 @@
     <ClInclude Include="genimon.h" />
     <ClInclude Include="joueur.h" />
     <ClInclude Include="unistd.h" />
+    <ClInclude Include="vecteur.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
