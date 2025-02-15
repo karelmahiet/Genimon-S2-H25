@@ -20,6 +20,12 @@ struct caseGenidex
 	vector<Genimon> listeGenimonAttrapé;
 };
 
+struct genimonChoisi
+{
+	int indexI = 0;
+	int indexJ = 0;
+};
+
 class Joueur
 {
 public:
@@ -39,7 +45,6 @@ public:
 	void gererGenimon();
 	void ajouterGenimon(bool refresh);
 	void retirerGenimon(bool refresh);
-	void deplacerGenimons(bool refresh);
 	bool estSurGenimon();
 	bool estSurPorte();
 	int position_x;
@@ -59,6 +64,12 @@ private:
 	vector<Genimon> historique;
 	string nomTerrain;
 	bool estExterieur;
+	int nbGenimonAttrapés;
+
+	void gererAttrapage(Genimon* genimon, int indexGenimon, bool passageDirect);
+	genimonChoisi choisirGenimon(Genimon* genimon, int indexFleche);
+	bool gererCombat(Genimon* genimon);
+	void afficherStatsManche(Genimon* adversaire, Genimon genimonJoueur, int bonusAdversaire, int bonusJoueur);
 };
 
 #endif

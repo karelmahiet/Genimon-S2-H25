@@ -24,6 +24,7 @@ void Joueur::initialiserJoueur(int pos_x, int pos_y)
     borne_y_max = 21;
     nomTerrain = "         Exterieur de la faculte";
     estExterieur = true;
+    nbGenimonAttrapés = 0;
 }
 
 void Joueur::changerTerrain()
@@ -52,7 +53,6 @@ void Joueur::changerTerrain()
 
 void Joueur::creerTerrain()
 {
-    srand(time(0));
     for (int y = 0; y < dimensionTerrain_y; y++) {
         for (int x = 0; x < dimensionTerrain_x; x++) {
             terrain[x][y] = '.';
@@ -86,14 +86,12 @@ void Joueur::ajouterGenimon(bool refresh)
     Genimon* nouveauGenimon = new Genimon;
     listeGenimons.ajouterElement(nouveauGenimon);
 
-    srand(time(0));
     int pos_x = rand() % dimensionTerrain_x;
     int pos_y  = rand() % dimensionTerrain_y;
 
     //Genimon n'apparait pas sur un objet
     while (terrain[pos_x][pos_y] == '1' || terrain[pos_x][pos_y] == 'X' || terrain[pos_x][pos_y] == '2')
     {
-        srand(time(0));
         pos_x = rand() % dimensionTerrain_x;
         pos_y = rand() % dimensionTerrain_y;
     }
@@ -109,83 +107,13 @@ void Joueur::ajouterGenimon(bool refresh)
 
 void Joueur::retirerGenimon(bool refresh)
 {
-    srand(time(0));
     int indexRandom = rand() % listeGenimons.Taille(); //Retire un genimon random
     terrain[listeGenimons[indexRandom]->position_x][listeGenimons[indexRandom]->position_y] = '.';
     listeGenimons.retirerElement(indexRandom);
 }
 
-void Joueur::deplacerGenimons(bool refresh)
-{
-    srand(time(0));
-    int indexGenimon = rand() % listeGenimons.Taille(); //index random
-
-    srand(time(0));
-    int possibilié = rand() % 4;
-    int deltaX = 0;
-    int deltaY = 0;
-    //Cas généraux
-    if (possibilié == 0)
-    {
-        deltaX = 1;
-        deltaY = 1;
-    }
-    else if (possibilié == 1)
-    {
-        deltaX = -1;
-        deltaY = -1;
-    }
-    else if (possibilié == 2)
-    {
-        deltaX = 1;
-        deltaY = -1;
-    }
-    else if (possibilié == 3)
-    {
-        deltaX = -1;
-        deltaY = 1;
-    }
-
-    //Cas de hors terrain
-    if (position_x == dimensionTerrain_x - 1 || position_y == dimensionTerrain_y - 1)
-    {
-        deltaX = -1;
-        deltaY = -1;
-    }
-    if (position_x == 0 || position_y == 0)
-    {
-        deltaX = 1;
-        deltaY = 1;
-    }
-
-    int prochainePositionX = listeGenimons[indexGenimon]->position_x + deltaX;
-    int prochainePositionY = listeGenimons[indexGenimon]->position_y + deltaY;
-    //Test pour ne pas écraser des objets
-    if (terrain[prochainePositionX][prochainePositionY] != '1' && terrain[prochainePositionX][prochainePositionY] != 'X'
-        && terrain[prochainePositionX][prochainePositionY] != '2')
-    {
-        terrain[listeGenimons[indexGenimon]->position_x][listeGenimons[indexGenimon]->position_y] = '.';
-        listeGenimons[indexGenimon]->position_x = prochainePositionX;
-        listeGenimons[indexGenimon]->position_y = prochainePositionY;
-        terrain[listeGenimons[indexGenimon]->position_x][listeGenimons[indexGenimon]->position_y] = '2';
-
-        if (refresh)
-        {
-            afficherPartie();
-        }
-    }
-}
-
 void Joueur::gererGenimon()
 {
-    #ifdef _WIN32
-        system("cls");
-    #endif
-    cout << "----------------------------------------------------------------------------------" << endl;
-    cout << "                               Duel contre un Genimon !                           " << endl << endl;
-    cout << "                         Vous avez 5 chances pour l'attraper                      " << endl << endl;
-    cout << "----------------------------------------------------------------------------------" << endl;
-
     //recherche du genimon
     Genimon* genimon = listeGenimons[0]; //par défaut
     bool genimonTrouve = false;
@@ -202,35 +130,571 @@ void Joueur::gererGenimon()
 
     if (genimonTrouve)
     {
-        //Combat contre genimon
-        genimon->apparait();
-        int typeGenimon = genimon->getTypeNumérique();
+        bool passageDirect = false;
+        bool victoire = false;
         historique.push_back(*genimon);
 
-        genimon->capture();
-        if (genimon->getEtat() == "capture")
+        if (genimon->getRareté() != "COMMUN")
         {
-            genidex[typeGenimon].listeGenimonAttrapé.push_back(*genimon);
+            if (nbGenimonAttrapés == 0)
+            {
+                #ifdef _WIN32
+                      system("cls");
+                #endif
+                genimon->apparait();
+
+                cout << "\nLe Genimon est de rarete superieure a COMMUN et vous n'avez attrape aucun Genimon pour combattre." << endl;
+                cout << "Vous avez donc perdu par defaut. Essayer de capturer des Genimons sur la faculte." << endl << endl;
+
+                bool retourJeu = false;
+                char touche;
+                cout << "Appuyez sur --R-- pour revenir au jeu" << endl;
+                while (!retourJeu)
+                {
+                    touche = _getch();
+                    if (touche == 'r' || touche == 'R')
+                    {
+                        retourJeu = true;
+                    }
+                    else
+                    {
+                        cout << "Touche invalide" << endl;
+                        cout << "Appuyez sur --R-- pour revenir au jeu" << endl;
+                    }
+                }
+            }
+            else
+            {
+                victoire = gererCombat(genimon);
+            }
+        }
+        else
+        {
+            passageDirect = true; //Pas de combat contre les Genimons communs. On peut toujours les attraper
         }
 
-        listeGenimons.retirerElement(indexGenimon); //Le genimon n'est plus sur le terrain
+        if (victoire || passageDirect)
+        {
+            gererAttrapage(genimon, indexGenimon, passageDirect);
+        }
+    }
+}
 
-        //Gère le retour au jeu
+genimonChoisi Joueur::choisirGenimon(Genimon* genimon, int indexFleche)
+{
+    #ifdef _WIN32
+        system("cls");
+    #endif
+    cout << "----------------------------------------------------------------------------------" << endl;
+    cout << "                               Duel contre un Genimon !                           " << endl << endl;
+    cout << "                         Choisissez un Genimon pour le combat                     " << endl << endl << endl;
+    cout << "                    Utilisez les touches w et s pour la selection                 " << endl << endl;
+    cout << "----------------------------------------------------------------------------------" << endl;
+    genimon->apparait();
+    cout << "\nFaites un choix dans l'inventaire:" << endl;
+
+    int compteur = 1;
+    genimonChoisi infos;
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < genidex[i].listeGenimonAttrapé.size(); j++)
+        {
+            if (indexFleche == compteur)
+            {
+                cout << "--> ";
+                infos.indexI = i;
+                infos.indexJ = j;
+            }
+            cout << compteur << ") " << "Nom: " << genidex[i].listeGenimonAttrapé[j].getNom() << ", Type: " << genidex[i].listeGenimonAttrapé[j].getType();
+            cout << ", Rarete: " << genidex[i].listeGenimonAttrapé[j].getRareté() << ", PV: " << genidex[i].listeGenimonAttrapé[j].getPV();
+            cout << ", Degats: " << genidex[i].listeGenimonAttrapé[j].getDegats() << endl;
+            compteur++;
+        }
+    }
+
+    cout << "\nAppuyez sur --C-- pour confirmer le choix ou sur --A-- pour abandonner le combat" << endl << endl;
+
+    return infos;
+}
+
+void Joueur::afficherStatsManche(Genimon* adversaire, Genimon genimonJoueur, int bonusAdversaire, int bonusJoueur)
+{
+    cout << adversaire->getNom() << " a " << adversaire->getPV() << " de PV et a un bonus de " << bonusAdversaire - 1 << endl;
+    cout << genimonJoueur.getNom() << " a " << genimonJoueur.getPV() << " de PV et a un bonus de " << bonusJoueur - 1 << endl << endl;
+}
+
+bool Joueur::gererCombat(Genimon* genimon)
+{
+    bool victoire = false;
+
+    //Partie choix
+    bool operationFinie = false;
+    bool annulationCombat = false;
+    int indexFleche = 1;
+    genimonChoisi infos;
+    infos = choisirGenimon(genimon, indexFleche);
+
+    while (!operationFinie)
+    {
+        char touche = _getch();
+
+        if (touche == 'w' || touche == 'W')
+        {
+            if (indexFleche > 1)
+            {
+                --indexFleche;
+            }
+            infos = choisirGenimon(genimon, indexFleche);
+        }
+        else if (touche == 's' || touche == 'S')
+        {
+            if (indexFleche < nbGenimonAttrapés)
+            {
+                ++indexFleche;
+            }
+            infos = choisirGenimon(genimon, indexFleche);
+        }
+        else if (touche == 'a' || touche == 'A')
+        {
+            annulationCombat = true;
+            operationFinie = true;
+        }
+        else if (touche == 'c' || touche == 'C')
+        {
+            if (genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].getPV() == 0)
+            {
+                cout << "Vous ne pouvez pas utiliser un Genimon KO. Veuillez en choisir un autre ou abandonnez le combat" << endl;
+            }
+            else
+            {
+                operationFinie = true;
+            }         
+        }
+        else
+        {
+            cout << "Touche invalide" << endl;
+        }
+    }
+
+    //Partie combat
+    if (!annulationCombat)
+    {
+        Genimon genimonChoisi = genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ];
+        int variationDegatsJoueur = 0;
+        int variationDegatsAdversaire = 0;
+        #ifdef _WIN32
+                system("cls");
+        #endif
+        cout << "----------------------------------------------------------------------------------" << endl;
+        cout << "                               Duel contre un Genimon !                           " << endl << endl;
+        cout << "                   Battez-le pour avoir la possiblite de l'attraper               " << endl << endl;
+        cout << "----------------------------------------------------------------------------------" << endl << endl;
+
+        //Set les avantages/désaventages de type
+        if (genimon->getTypeSupérieur() == genimonChoisi.getType())
+        {
+            variationDegatsAdversaire = -genimon->getFacteurDegats();
+            cout << "ATTENTION: Par desavantage de type, les degats de l'adversaire sont reduits de " << -1 * variationDegatsAdversaire  << endl << endl;
+        }
+        else  if (genimon->getTypeInférieur() == genimonChoisi.getType())
+        {        
+            variationDegatsAdversaire = genimon->getFacteurDegats();
+            cout << "ATTENTION: Par avantage de type, les degats de l'adversaire sont augmentes de " << variationDegatsAdversaire << endl << endl;
+        }
+
+        if (genimonChoisi.getTypeSupérieur() == genimon->getType())
+        {
+            variationDegatsJoueur = -genimonChoisi.getFacteurDegats();
+            cout << "ATTENTION: Par desavantage de type, les degats du joueur sont reduits de " << -1 * variationDegatsJoueur << endl << endl;
+        }
+        else  if (genimonChoisi.getTypeInférieur() == genimon->getType())
+        {
+            variationDegatsJoueur = genimonChoisi.getFacteurDegats();
+            cout << "ATTENTION: Par avantage de type, les degats du joueur sont augmentes de " << variationDegatsJoueur << endl << endl;
+        }
+
+        //Affiche les opposants
+        cout << "Genimon a battre\n" << "Nom: " << genimon->getNom() << ", Type: " << genimon->getType();
+        cout << ", Rarete: " << genimon->getRareté() << ", PV: " << genimon->getPV();
+        cout << ", Degats: " << genimon->getDegats() + variationDegatsAdversaire;
+        if (variationDegatsAdversaire < 0)
+        {
+            cout << " (-)" << endl << endl;
+        }
+        else if(variationDegatsAdversaire > 0)
+        {
+            cout << " (+)" << endl << endl;
+        }
+        else
+        {
+            cout << endl << endl;
+        }
+
+        cout << "Genimon choisi\n" << "Nom: " << genimonChoisi.getNom() << ", Type: " << genimonChoisi.getType();
+        cout << ", Rarete: " << genimonChoisi.getRareté() << ", PV: " << genimonChoisi.getPV();
+        cout << ", Degats: " << genimonChoisi.getDegats() + variationDegatsJoueur;
+        if (variationDegatsJoueur < 0)
+        {
+            cout << " (-)" << endl << endl;
+        }
+        else if (variationDegatsJoueur > 0)
+        {
+            cout << " (+)" << endl << endl;
+        }
+        else
+        {
+            cout << endl << endl;
+        }
+
+        int pileOuFace = rand() % 2;
+        int numeroManche = 1;
+        bool unGenimonMort = false;
+        bool tourJoueur = true;
+        bool joueurCommence = true;
+
+        int degatsJoueur = 0;
+        int degatsAdversaire = 0;
+        bool joueurAttaque = false;
+        bool adversaireAttaque = false;
+        float bouclierJoueur = 1;
+        float bouclierAdversaire = 1;
+        int bonusJoueur = 1;
+        int bonusAdversaire = 1;
+        string choixJoueur;
+        string choixAdversaire;
+
+        cout << "Tirage a pile ou face..." << endl;
+        std::this_thread::sleep_for(std::chrono::seconds(4));
+        if (pileOuFace == 0)
+        {
+            tourJoueur = true;
+            joueurCommence = true;
+            cout << "Le Joueur commence!" << endl << endl;
+        }
+        else if (pileOuFace == 1)
+        {
+            tourJoueur = false;
+            joueurCommence = false;
+            cout << "L'adversaire commence!" << endl << endl;
+        }
+
+        cout << "\n----Manche #" << numeroManche << "----" << endl;
+
+        while (!unGenimonMort)
+        {        
+            if (tourJoueur)
+            {
+                cout << "Tour Joueur" << endl;
+                cout << "Appuyez sur --A-- pour attaquer, sur --B-- pour bloquer, sur --C-- pour accumuler un bonus ou sur --Q-- pour quitter le combat" << endl;
+
+                bool toucheValide = false;
+                char touche;
+
+                while (!toucheValide)
+                {
+                    touche = _getch();
+
+                    if (touche == 'a' || touche == 'A')
+                    {                      
+                        degatsJoueur = (genimonChoisi.getDegats() + variationDegatsJoueur) * bonusJoueur;                      
+                        choixJoueur = "Le joueur attaque avec " + to_string(degatsJoueur) + " de degats contre l'adversaire";
+                        bonusJoueur = 1; //reset le bonus après l'utilisation
+                        joueurAttaque = true;                                             
+                        toucheValide = true;
+                        cout << "Le joueur a choisi" << endl << endl;
+                    }
+                    else  if (touche == 'b' || touche == 'B')
+                    {
+                        bouclierJoueur = 0.5 / bonusJoueur;
+                        choixJoueur = "Le joueur bloque l'adversaire a " + to_string((1 - bouclierJoueur) * 100) + "%";
+                        toucheValide = true;
+                        bonusJoueur = 1; //reset le bonus après l'utilisation
+                        cout << "Le joueur a choisi" << endl << endl;
+                    }
+                    else  if (touche == 'c' || touche == 'C')
+                    {
+                        bonusJoueur++;
+                        choixJoueur = "Le joueur accumule un bonus";
+                        toucheValide = true;
+                        cout << "Le joueur a choisi" << endl << endl;
+                    }
+                    else  if (touche == 'q' || touche == 'Q')
+                    {
+                        cout << "Voulez-vous vraiment quitter le combat? Les PV perdus ne sont pas restaure. (O/N)" << endl;
+                        bool operationFinie = false;
+
+                        while (!operationFinie)
+                        {
+                            char touche = _getch();
+
+                            if (touche == 'o' || touche == 'O')
+                            {
+                                cout << "---Le joueur abandonne le combat---" << endl;
+                                toucheValide = true;
+                                unGenimonMort = true;
+                                std::this_thread::sleep_for(std::chrono::seconds(2));
+
+                                operationFinie = true;
+                            }
+                            else if (touche == 'n' || touche == 'N')
+                            {
+                                cout << "Appuyez sur --A-- pour attaquer, sur --B-- pour bloquer, sur --C-- pour accumuler un bonus ou sur --Q-- pour quitter le combat" << endl;
+                                operationFinie = true;
+                            }
+                            else
+                            {
+                                cout << "Touche invalide" << endl;
+                            }
+                        }                      
+                    }
+                    else
+                    {
+                        cout << "Touche invalide" << endl;
+                    }
+                }                         
+
+                if (!joueurCommence && !unGenimonMort)
+                {           
+                    if (adversaireAttaque)
+                    {                        
+                        genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].varierPV(-degatsAdversaire * bouclierJoueur);                      
+                        bouclierJoueur = 1; //reset le bouclier après l'utilisation
+                        degatsAdversaire = 0;
+                        adversaireAttaque = false;
+
+                        if (genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].getPV() <= 0)
+                        {
+                            unGenimonMort = true;
+                            genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].setPV(0); //Minimum de pv à 0
+
+                            cout << choixAdversaire << endl;
+                            cout << choixJoueur << endl << endl;
+                            afficherStatsManche(genimon, genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ], bonusAdversaire, bonusJoueur);
+                            cout << "Defaite du joueur! " << genimonChoisi.getNom() << " est KO" << endl << endl;
+                            std::this_thread::sleep_for(std::chrono::seconds(2));
+                        }
+                    }
+
+                    if (joueurAttaque)
+                    {
+                        genimon->varierPV(-degatsJoueur * bouclierAdversaire);
+                        bouclierAdversaire = 1; //reset le bouclier après l'utilisation
+                        degatsJoueur = 0;
+                        joueurAttaque = false;
+
+                        if (genimon->getPV() <= 0)
+                        {
+                            unGenimonMort = true;
+                            victoire = true;
+                            genimon->setPV(genimon->pvMax); //pv régénéré
+
+                            cout << choixAdversaire << endl;
+                            cout << choixJoueur << endl << endl;
+                            afficherStatsManche(genimon, genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ], bonusAdversaire, bonusJoueur);
+                            cout << "Victoire du joueur! " << genimon->getNom() << " est KO" << endl << endl;
+                            std::this_thread::sleep_for(std::chrono::seconds(2));
+                        }
+                    }
+
+                    if (!unGenimonMort)
+                    {
+                        bouclierJoueur = 1; //reset le bouclier après l'utilisation
+                        bouclierAdversaire = 1; //reset le bouclier après l'utilisation
+                        cout << choixAdversaire << endl;
+                        cout << choixJoueur << endl << endl;
+                        afficherStatsManche(genimon, genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ], bonusAdversaire, bonusJoueur);
+                        ++numeroManche;
+                        cout << "\n----Manche #" << numeroManche << "----" << endl;
+                    }                
+
+                    joueurCommence = true;
+                }
+                else
+                {
+                    tourJoueur = false;
+                }
+            }
+            else
+            {
+                cout << "Tour Adversaire" << endl;
+                std::this_thread::sleep_for(std::chrono::seconds(2));
+                int choix = rand() % 3;
+                if (choix == 0)
+                {
+                    degatsAdversaire = (genimon->getDegats() + variationDegatsAdversaire) * bonusAdversaire;
+                    choixAdversaire = "L'adversaire attaque avec " + to_string(degatsAdversaire) + " de degats contre le joueur";
+                    bonusAdversaire = 1; //reset le bonus après l'utilisation
+                    adversaireAttaque = true;                  
+                }
+                else  if (choix == 1)
+                {
+                    if (!joueurCommence) //L'adversaire ne défend pas si il commence, il va attaquer ou se donner un bonus
+                    {
+                        int choixSecondaire = rand() % 2;
+                        if (choixSecondaire == 0)
+                        {
+                            degatsAdversaire = (genimon->getDegats() + variationDegatsAdversaire) * bonusAdversaire;
+                            choixAdversaire = "L'adversaire attaque avec " + to_string(degatsAdversaire) + " de degats contre le joueur";
+                            bonusAdversaire = 1; //reset le bonus après l'utilisation
+                            adversaireAttaque = true;
+                        }         
+                        else if (choixSecondaire == 1)
+                        {
+                            bonusAdversaire++;
+                            choixAdversaire = "L'adversaire accumule un bonus";
+                        }
+                    }
+                    else
+                    {
+                        bouclierAdversaire = 0.5 / bonusAdversaire;
+                        choixAdversaire = "L'adversaire bloque le joueur a " + to_string((1 - bouclierAdversaire) * 100) + "%";
+                        bonusAdversaire = 1; //reset le bonus après l'utilisation
+                    }              
+                }
+                else  if (choix == 2)
+                {
+                    bonusAdversaire++;
+                    choixAdversaire = "L'adversaire accumule un bonus";
+                }            
+
+                cout << "L'adversaire a choisi" << endl << endl;
+
+                if (joueurCommence)
+                {                
+                    if (joueurAttaque)
+                    {
+                        genimon->varierPV(-degatsJoueur * bouclierAdversaire);                      
+                        bouclierAdversaire = 1; //reset le bouclier après l'utilisation
+                        degatsJoueur = 0;
+                        joueurAttaque = false;
+
+                        if (genimon->getPV() <= 0)
+                        {
+                            unGenimonMort = true;
+                            victoire = true;
+                            genimon->setPV(genimon->pvMax); //pv régénéré
+
+                            cout << choixJoueur << endl;
+                            cout << choixAdversaire << endl << endl;
+                            afficherStatsManche(genimon, genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ], bonusAdversaire, bonusJoueur);
+                            cout << "Victoire du joueur! " << genimon->getNom() << " est KO" << endl << endl;
+                            std::this_thread::sleep_for(std::chrono::seconds(2));
+                        }
+                    }
+
+                    if (adversaireAttaque)
+                    {
+                        genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].varierPV(-degatsAdversaire * bouclierJoueur);
+                        bouclierJoueur = 1; //reset le bouclier après l'utilisation
+                        degatsAdversaire = 0;
+                        adversaireAttaque = false;
+
+                        if (genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].getPV() <= 0)
+                        {
+                            unGenimonMort = true;
+                            genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].setPV(0); //Minimum de pv à 0
+
+                            cout << choixJoueur << endl;
+                            cout << choixAdversaire << endl << endl;
+                            afficherStatsManche(genimon, genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ], bonusAdversaire, bonusJoueur);
+                            cout << "Defaite du joueur! " << genimonChoisi.getNom() << " est KO" << endl << endl;
+                            std::this_thread::sleep_for(std::chrono::seconds(2));
+                        }
+                    }
+
+                    if (!unGenimonMort)
+                    {
+                        bouclierJoueur = 1; //reset le bouclier après l'utilisation
+                        bouclierAdversaire = 1; //reset le bouclier après l'utilisation
+                        cout << choixJoueur << endl;
+                        cout << choixAdversaire << endl << endl;
+                        afficherStatsManche(genimon, genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ], bonusAdversaire, bonusJoueur);
+                        ++numeroManche;
+                        cout << "\n----Manche #" << numeroManche << "----" << endl;
+                    }                  
+
+                    joueurCommence = false;
+                }         
+                else
+                {
+                    tourJoueur = true;
+                }             
+            }
+        }
+
         bool retourJeu = false;
         char touche;
-        cout << "Appuyez sur --R-- pour revenir au jeu" << endl;
+        cout << "Appuyez sur --Q-- pour quitter le combat" << endl;
         while (!retourJeu)
         {
             touche = _getch();
-            if (touche == 'r' || touche == 'R')
+            if (touche == 'q' || touche == 'Q')
             {
                 retourJeu = true;
             }
             else
             {
                 cout << "Touche invalide" << endl;
-                cout << "Appuyez sur --R-- pour revenir au jeu" << endl;
+                cout << "Appuyez sur --Q-- pour quitter le combat" << endl;
             }
+        }
+    }
+    else
+    {
+        cout << "\n---Combat annule---" << endl;
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+    }
+
+    return victoire;
+}
+
+void Joueur::gererAttrapage(Genimon* genimon, int indexGenimon, bool passageDirect)
+{
+    #ifdef _WIN32
+        system("cls");
+    #endif
+    cout << "----------------------------------------------------------------------------------" << endl;
+    cout << "                            Face a face avec un Genimon !                         " << endl << endl;
+    cout << "                         Vous avez 5 chances pour l'attraper                      " << endl << endl;
+    cout << "----------------------------------------------------------------------------------" << endl;
+    
+    if (passageDirect)
+    {
+        genimon->apparait();
+    }
+    else
+    {
+        cout << "\nGenimon battu\n" << "Nom: " << genimon->getNom() << ", Type: " << genimon->getType();
+        cout << ", Rarete: " << genimon->getRareté() << ", PV: " << genimon->getPV();
+        cout << ", Degats: " << genimon->getDegats() << endl << endl;
+    }
+
+    int typeGenimon = genimon->getTypeNumérique();
+
+    bool captureReussie = genimon->capture();
+    if (captureReussie)
+    {
+        genidex[typeGenimon].listeGenimonAttrapé.push_back(*genimon);
+        nbGenimonAttrapés++;
+    }
+
+    listeGenimons.retirerElement(indexGenimon); //Le genimon n'est plus sur le terrain
+
+    //Gère le retour au jeu
+    bool retourJeu = false;
+    char touche;
+    cout << "Appuyez sur --R-- pour revenir au jeu" << endl;
+    while (!retourJeu)
+    {
+        touche = _getch();
+        if (touche == 'r' || touche == 'R')
+        {
+            retourJeu = true;
+        }
+        else
+        {
+            cout << "Touche invalide" << endl;
+            cout << "Appuyez sur --R-- pour revenir au jeu" << endl;
         }
     }
 }
@@ -248,7 +712,8 @@ void Joueur::consulterDétailsType(int typeNumérique, string type)
     for (int i = 0; i < tailleListe; i++)
     {
         cout << i << ") " << "Nom: " << genidex[typeNumérique].listeGenimonAttrapé[i].getNom() << "\n   Type: " << genidex[typeNumérique].listeGenimonAttrapé[i].getType();
-        cout << "\n   Rarete: " << genidex[typeNumérique].listeGenimonAttrapé[i].getRareté() << endl;
+        cout << "\n   Rarete: " << genidex[typeNumérique].listeGenimonAttrapé[i].getRareté() << "\n   PV: " << genidex[typeNumérique].listeGenimonAttrapé[i].getPV();
+        cout << "\n   Degats: " << genidex[typeNumérique].listeGenimonAttrapé[i].getDegats() << endl;
     }
 
     cout << endl;
@@ -368,7 +833,8 @@ void Joueur::consulterHistorique()
     for (int i = 0; i < historique.size(); i++)
     {
         cout << i << ") " << "Nom: " << historique[i].getNom() << ", Type: " << historique[i].getType();
-        cout << ", Rarete: " << historique[i].getRareté() << endl;
+        cout << ", Rarete: " << historique[i].getRareté() << ", PV: " << historique[i].getPV();
+        cout << ", Degats: " << historique[i].getDegats() << endl;
     }
 
     cout << "\nAppuyez sur --F-- pour fermer l'historique" << endl;

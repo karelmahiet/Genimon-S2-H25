@@ -17,24 +17,36 @@ class Genimon
 public:
 	Genimon();
 	void apparait();
-	void capture();
+	bool capture();
 	void setRareté();
 	int getTypeNumérique();
 	string getType();
+	string getTypeSupérieur();
+	string getTypeInférieur();
 	string getNom();
-	string getRareté();
-	string getEtat();
-	void setEtat(string nouvelÉtat);
+	string getRareté();;
+	int getPV();
+	void setPV(int nouveauPV);
+	void varierPV(int variation);
+	int getDegats();
+	int getFacteurDegats();
 	int position_x;
 	int position_y;
+	int pvMax;
 private:
 	string nom;
-	string rareté;
+	string rarete;
 	string type;
 	int typeNumérique;
 	int nbBalle;
 	int facteurChance;
-	string état;
+
+	//variables pour les combats
+	string typeSupérieur;
+	string typeInférieur;
+	int pv;
+	int degats;
+	int facteurDegats;
 };
 
 #endif

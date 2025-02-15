@@ -9,7 +9,8 @@ const int maxGenimon = 15;
 
 enum Etat etatJeu = Initialise;
 Joueur* joueur;
-bool generationPermise = false;
+bool apparitionsPermises = false;
+bool disparitionsPermises = false;
 bool resfreshPermis = true;
 
 void afficherBienvenue()
@@ -57,7 +58,6 @@ void gererInitialisation()
 
         if (touche == 'd' || touche == 'D')
         {
-            cout << "\nCreation du terrain en cours..." << endl;
             joueur = new Joueur;
             etatJeu = EnCours;
             operationFinie = true;
@@ -114,7 +114,8 @@ void gererConfirmation(int option, bool* finPartie)
             if (option == 1)
             {
                 etatJeu = Initialise;            
-                generationPermise = false;
+                apparitionsPermises = false;
+                disparitionsPermises = false;
                 resfreshPermis = true;
             }
             else
@@ -127,7 +128,7 @@ void gererConfirmation(int option, bool* finPartie)
         else if (touche == 'a' || touche == 'A')
         {
             operationFinie = true;
-            *finPartie = true;
+            *finPartie = false;
         }
         else
         {
@@ -232,7 +233,8 @@ void gererPartie()
 
     while (!operationFinie)
     {
-        generationPermise = true;
+        apparitionsPermises = true;
+        disparitionsPermises = true;
         resfreshPermis = true;
         if (_kbhit())
         {
@@ -260,7 +262,8 @@ void gererPartie()
                 gererHistorique();
             }
             else if (touche == ' ') {
-                generationPermise = false;
+                apparitionsPermises = false;
+                disparitionsPermises = false;
                 resfreshPermis = false;
                 gererPause();
             }
@@ -279,12 +282,14 @@ void gererPartie()
 
             if (joueur->estSurGenimon())
             {
+                disparitionsPermises = false;
                 resfreshPermis = false;
                 joueur->gererGenimon();
             }
             else if (joueur->estSurPorte())
             {
-                generationPermise = false;
+                apparitionsPermises = false;
+                disparitionsPermises = false;
                 resfreshPermis = false;
                 joueur->changerTerrain();
             }
@@ -297,27 +302,26 @@ void gererPartie()
         }
     }
 
-    generationPermise = false;
+    apparitionsPermises = false;
+    disparitionsPermises = false;
     delete joueur;
 }
 
 //Apparition et disparition des genimons
-void gererThread1()
+void gererThread()
 {
     while (true) {
         if (etatJeu == EnCours)
         {
-            if (generationPermise && joueur->listeGenimons.Taille() <= maxGenimon)
-            {
-                srand(time(0));
+            if (apparitionsPermises && joueur->listeGenimons.Taille() <= maxGenimon)
+            {             
                 if ((rand() % 2) == 1)
                 {
                     joueur->ajouterGenimon(resfreshPermis);
                 }
             }
-            if (joueur->listeGenimons.Taille() >= 10)
+            if (disparitionsPermises && joueur->listeGenimons.Taille() >= 10)
             {
-                srand(time(0));
                 if ((rand() % 5) == 1)
                 {
                     joueur->retirerGenimon(resfreshPermis);
@@ -329,26 +333,11 @@ void gererThread1()
     }
 }
 
-//Déplacement des genimons
-void gererThread2()
-{
-    while (true) {
-        if (generationPermise && joueur->listeGenimons.Taille() > 0)
-        {
-            joueur->deplacerGenimons(resfreshPermis);
-        }
-        this_thread::sleep_for(chrono::milliseconds(2000));
-    }
-}
-
 int main()
 {
-    thread t1(gererThread1);
-    t1.detach();
-
-    //Note: les déplacements ne sont pas très bon sous interface console. Option pour Qt
-    //thread t2(gererThread2);
-    //t2.detach();
+    srand(time(0));
+    thread t(gererThread);
+    t.detach();
 
     while (true)
     {
