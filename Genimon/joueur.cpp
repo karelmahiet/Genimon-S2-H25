@@ -3,6 +3,7 @@
 Joueur::Joueur(int x0, int y0)
 {
     initialiserJoueur(x0, y0);
+    choisirStarter();
     creerTerrain();
 }
 
@@ -26,7 +27,30 @@ void Joueur::initialiserJoueur(int pos_x, int pos_y)
     estExterieur = true;
     nbGenimonAttrapés = 0;
 }
+void Joueur::choisirStarter() {
+	cout << "Choissisez votre starter: " << endl<<endl;
+	cout << "Quel est votre nom ?" << endl;
+	string nom;
+	cin >> nom;
+	cout << "Quel est votre type ?" << endl;
+	cout << "1) Genie Informatique" << endl;
+	cout << "2) Genie Electrique" << endl;
+	cout << "3) Genie Robotique" << endl;
+	cout << "4) Genie Civil" << endl;
+	cout << "5) Genie du Batiment" << endl;
+	cout << "6) Genie Biotech" << endl;
+	cout << "7) Genie Chimique" << endl;
+	cout << "8) Genie Mecanique" << endl;           
+	char choix = _getch();                                                  
+	if (choix !='1' && choix!='2' && choix != '3' && choix != '4' && choix != '5' && choix != '6' && choix != '7' || choix != '8') {
+		cout << "Choix invalide, veuillez choisir un nombre entre 1 et 8" << endl;
+        choix = _getch();
+	}
+	GenimonS *G = new GenimonS(choix, nom);
+    genidex[G->getTypeNumérique()].listeGenimonAttrapé.push_back(*G);
+    nbGenimonAttrapés++;
 
+}
 void Joueur::changerTerrain()
 {
     if (estExterieur)

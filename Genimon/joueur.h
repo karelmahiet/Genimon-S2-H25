@@ -10,6 +10,7 @@
 #include <chrono>
 #include <conio.h>
 #include <cstdlib>
+#include "genimonS.h"
 using namespace std;
 
 #define dimensionTerrain_x 37
@@ -45,6 +46,7 @@ public:
 	void gererGenimon();
 	void ajouterGenimon(bool refresh);
 	void retirerGenimon(bool refresh);
+	void choisirStarter();			
 	bool estSurGenimon();
 	bool estSurPorte();
 	int position_x;

@@ -16,9 +16,9 @@ class Genimon
 {
 public:
 	Genimon();
-	void apparait();
+	virtual void apparait();
 	bool capture();
-	void setRareté();
+	virtual void setRareté();
 	int getTypeNumérique();
 	string getType();
 	string getTypeSupérieur();
@@ -33,7 +33,7 @@ public:
 	int position_x;
 	int position_y;
 	int pvMax;
-private:
+protected:
 	string nom;
 	string rarete;
 	string type;
