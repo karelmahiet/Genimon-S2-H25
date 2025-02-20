@@ -2,60 +2,152 @@
 
 Genimon::Genimon() {
     nbBalle = 5;
-
     int random = rand() % 8;
+    typeNumérique = random;
+    SetNom();
     if (random == 0) {
         type = "informatique";
         typeSupérieur = "aucunI";
         typeInférieur = "civil";
-        nom = "Jeremie";
     }
     else if (random == 1) {
         type = "electrique";
         typeSupérieur = "aucunE";
         typeInférieur = "batiment";
-        nom = "Vincent";
+
     }
     else if (random == 2) {
         type = "robotique";
         typeSupérieur = "bioTech";
         typeInférieur = "aucunR";
-        nom = "Karel";
+   
     }
     else if (random == 3) {
         type = "mecanique";
         typeSupérieur = "civil";
         typeInférieur = "bioTech";
-        nom = "Dylan";
+   
     }
     else if (random == 4) {
         type = "civil";
         typeSupérieur = "informatique";
         typeInférieur = "mecanique";
-        nom = "Alexis";
+  
     }
     else if (random == 5) {
         type = "batiment";
         typeSupérieur = "electrique";
         typeInférieur = "chimique";
-        nom = "Marek";
+   
     }
     else if (random == 6) {
         type = "bioTech";
         typeSupérieur = "mecanique";
         typeInférieur = "robotique";
-        nom = "Florian";
+  
     }
     else if (random == 7) {
         type = "chimique";
         typeSupérieur = "batiment";
         typeInférieur = "chimique";
-        nom = "Darnley";
+     
     }
 
     setRareté();
-    typeNumérique = random;
     facteurDegats = degats/3;
+}
+
+void Genimon::SetNom() {
+	if (typeNumérique == 0) { // informatique
+        int random = rand() % 4;
+        if (random == 0)
+            nom = "Jeremie";
+        else if (random == 1)
+            nom = "Amine";
+        else if (random == 2)
+            nom = "Alexandre";
+        else if (random == 3)
+            nom = "Manon";
+	}
+	else if (typeNumérique == 1) { // electrique
+        int random = rand() % 4;
+        if (random == 0)
+            nom = "Florian";
+        else if (random == 1)
+            nom = "Dylan";
+        else if (random == 2)
+            nom = "Natasha";
+        else if (random == 3)
+            nom = "Elon";
+	}
+	else if (typeNumérique == 2) { // robotique
+        int random = rand() % 4;
+		if (random == 0)
+			nom = "Alexis";
+		else if (random == 1)
+			nom = "Melianne";
+		else if (random == 2)
+			nom = "Joe";
+		else if (random == 3)
+			nom = "Rose";
+	}
+	else if (typeNumérique == 3) { // mecanique
+        int random = rand() % 4;
+		if (random == 0)
+			nom = "Eric";
+		else if (random == 1)
+			nom = "Robert";
+		else if (random == 2)
+			nom = "Trump";
+		else if (random == 3)
+			nom = "Isabelle";
+	}
+	else if (typeNumérique == 4) { // civil
+        int random = rand() % 4;
+		if (random == 0)
+			nom = "Vincent";
+		else if (random == 1)
+			nom = "Jeff";
+		else if (random == 2)
+			nom = "Francois";
+		else if (random == 3)
+			nom = "Laurianne";
+		
+	}
+	else if (typeNumérique == 5) { // batiment
+        int random = rand() % 4;
+		if (random == 0)
+			nom = "Steve";
+		else if (random == 1)
+			nom = "Marek";
+		else if (random == 2)
+			nom = "Marianne";
+		else if (random == 3)
+			nom = "Angelie";
+	}
+	else if (typeNumérique == 6) { // bioTech
+        int random = rand() % 4;
+		if (random == 0)
+			nom = "Karel";
+		else if (random == 1)
+			nom = "Lilianne";
+		else if (random == 2)
+			nom = "Antoine";
+		else if (random == 3)
+			nom = "Mikael";
+	}
+	else if (typeNumérique == 7) { // chimique
+        int random = rand() % 4;
+		if (random == 0)
+			nom = "Olivier";
+		else if (random == 1)
+			nom = "Darnley";
+		else if (random == 2)
+			nom = "Philippe";
+		else if (random == 3)
+			nom = "France";
+	}
+
 }
 
 void Genimon::setRareté()

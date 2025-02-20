@@ -18,6 +18,7 @@ public:
 	Genimon();
 	virtual void apparait();
 	bool capture();
+	void SetNom();
 	virtual void setRareté();
 	int getTypeNumérique();
 	string getType();
