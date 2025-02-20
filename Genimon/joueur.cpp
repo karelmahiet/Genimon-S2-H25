@@ -42,10 +42,6 @@ void Joueur::choisirStarter() {
 	cout << "7) Genie Chimique" << endl;
 	cout << "8) Genie Mecanique" << endl;           
 	char choix = _getch();                                                  
-	if (choix !='1' && choix!='2' && choix != '3' && choix != '4' && choix != '5' && choix != '6' && choix != '7' || choix != '8') {
-		cout << "Choix invalide, veuillez choisir un nombre entre 1 et 8" << endl;
-        choix = _getch();
-	}
 	GenimonS *G = new GenimonS(choix, nom);
     genidex[G->getTypeNumérique()].listeGenimonAttrapé.push_back(*G);
     nbGenimonAttrapés++;

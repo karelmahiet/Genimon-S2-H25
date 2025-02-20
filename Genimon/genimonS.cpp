@@ -25,35 +25,35 @@ GenimonS::GenimonS(char typeC, string nomC) {
 		typeNumérique = 2;
       
     }
-    else if (typeC == '4') {
+    else if (typeC == '8') {
         type = "mecanique";
         typeSupérieur = "civil";
         typeInférieur = "bioTech";
 		typeNumérique = 3;
 
     }
-    else if (typeC == '5') {
+    else if (typeC == '4') {
         type = "civil";
         typeSupérieur = "informatique";
         typeInférieur = "mecanique";
 		typeNumérique = 4;
     
     }
-    else if (typeC == '6') {
+    else if (typeC == '5') {
         type = "batiment";
         typeSupérieur = "electrique";
         typeInférieur = "chimique";
 		typeNumérique = 5;
      
     }
-    else if (typeC == '7') {
+    else if (typeC == '6') {
         type = "bioTech";
         typeSupérieur = "mecanique";
         typeInférieur = "robotique";
         nom = "Florian";
 		typeNumérique = 6;
     }
-    else if (typeC == '8') {
+    else if (typeC == '7') {
         type = "chimique";
         typeSupérieur = "batiment";
         typeInférieur = "chimique";
