@@ -1,4 +1,6 @@
 #include "joueur.h"
+#include "gestionJeu.h"
+#include "ctime"
 
 enum Etat
 {
@@ -12,6 +14,20 @@ Joueur* joueur;
 bool apparitionsPermises = false;
 bool disparitionsPermises = false;
 bool resfreshPermis = true;
+
+
+bool evenementActive() {
+    time_t now = time(nullptr);
+
+    // On crée une structure tm locale "safe"
+    struct tm localTime;
+
+    // Sous Visual Studio/Windows, on utilise localtime_s()
+    localtime_s(&localTime, &now);
+
+    // On vérifie l'heure
+    return (localTime.tm_hour >= 17 && localTime.tm_hour < 20);
+}
 
 void afficherBienvenue()
 {

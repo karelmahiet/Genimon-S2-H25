@@ -1,4 +1,5 @@
 #include "joueur.h"
+#include "gestionJeu.h"
 
 Joueur::Joueur(int x0, int y0)
 {
@@ -154,13 +155,17 @@ void Joueur::gererGenimon()
         bool victoire = false;
         historique.push_back(*genimon);
 
-        if (genimon->getRareté() != "COMMUN")
+        //Vérifier si l'événement est actif
+        if (evenementActive()) {
+            passageDirect = true;
+        }
+        else if (genimon->getRareté() != "COMMUN")
         {
             if (nbGenimonAttrapés == 0)
             {
-                #ifdef _WIN32
-                      system("cls");
-                #endif
+#ifdef _WIN32
+                system("cls");
+#endif
                 genimon->apparait();
 
                 cout << "\nLe Genimon est de rarete superieure a COMMUN et vous n'avez attrape aucun Genimon pour combattre." << endl;
@@ -190,7 +195,7 @@ void Joueur::gererGenimon()
         }
         else
         {
-            passageDirect = true; //Pas de combat contre les Genimons communs. On peut toujours les attraper
+            passageDirect = true;
         }
 
         if (victoire || passageDirect)
@@ -198,6 +203,7 @@ void Joueur::gererGenimon()
             gererAttrapage(genimon, indexGenimon, passageDirect);
         }
     }
+
 }
 
 genimonChoisi Joueur::choisirGenimon(Genimon* genimon, int indexFleche)
@@ -861,24 +867,27 @@ void Joueur::consulterHistorique()
 }
 
 void Joueur::afficherPartie() {
-    #ifdef _WIN32
-        system("cls");
-    #endif
+#ifdef _WIN32
+    system("cls");
+#endif
 
     afficherMenuPrincipal();
 
+    if (evenementActive()) {
+        cout << "***** C'EST LE 5@8 *****" << endl;
+    }
+
     cout << "\n" << nomTerrain << endl << endl;
 
-    //Mise à jour de la position
+    // Mise à jour de la position et affichage du terrain (reste de la méthode inchangé)
     if (terrain[anciennePosition_x][anciennePosition_y] != 'X')
     {
-        terrain[anciennePosition_x][anciennePosition_y] = '.'; //On ne détruit pas les portes
+        terrain[anciennePosition_x][anciennePosition_y] = '.';
     }
     terrain[position_x][position_y] = '1';
     anciennePosition_x = position_x;
     anciennePosition_y = position_y;
 
-    //Affichage du terrain
     for (int y = borne_y_min; y < borne_y_max; y++) {
         for (int x = borne_x_min; x < borne_x_max; x++) {
             cout << terrain[x][y] << " ";
@@ -886,6 +895,7 @@ void Joueur::afficherPartie() {
         cout << endl;
     }
 }
+
 
 void Joueur::afficherMenuPrincipal()
 {

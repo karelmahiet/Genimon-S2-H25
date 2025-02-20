@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClInclude Include="genimon.h" />
     <ClInclude Include="genimonS.h" />
+    <ClInclude Include="gestionJeu.h" />
     <ClInclude Include="joueur.h" />
     <ClInclude Include="unistd.h" />
     <ClInclude Include="vecteur.h" />

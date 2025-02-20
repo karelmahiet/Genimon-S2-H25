@@ -152,55 +152,74 @@ void Genimon::SetNom() {
 
 void Genimon::setRareté()
 {
+    time_t now = time(0);
+
+    struct tm localTime;
+
+    localtime_s(&localTime, &now);
+
+    //entre 5 et 8
+    if (localTime.tm_hour >= 17 && localTime.tm_hour < 20)
+    {
+        //force epique ou leg
+        int r = rand() % 2;
+        if (r == 0) {
+            rarete = "EPIQUE";
+            facteurChance = 1;
+            pv = 200 + (rand() % 101);      // entre 200 et 300
+            degats = 40 + (rand() % 21);   // entre 40 et 60
+        }
+        else {
+            rarete = "!! LEGENDAIRE !!";
+            facteurChance = 0;
+            pv = 300 + (rand() % 201);     // entre 300 et 500
+            degats = 60 + (rand() % 31);   // entre 60 et 90
+        }
+        pvMax = pv;
+        return;
+    }
+
+    //sinon, normal
     int random = rand() % 100;
-    if (random >= 0 && random < 50)
+    if (random < 50)
     {
         rarete = "COMMUN";
         facteurChance = 4;
-
-        pv = 50 + (rand() % 51); //Entre 50 et 100
-
-        degats = 10 + (rand() % 11); //Entre 10 et 20
+        pv = 50 + (rand() % 51);
+        degats = 10 + (rand() % 11);
     }
-    else if (random >= 50 && random < 80)
+    else if (random < 80)
     {
         rarete = "RARE";
         facteurChance = 2;
-
-        pv = 100 + (rand() % 101); //Entre 100 et 200
-
-        degats = 20 + (rand() % 21); //Entre 20 et 40
+        pv = 100 + (rand() % 101);
+        degats = 20 + (rand() % 21);
     }
-    else if (random >= 80 && random < 95)
+    else if (random < 95)
     {
         rarete = "EPIQUE";
         facteurChance = 1;
-
-        pv = 200 + (rand() % 101); //Entre 200 et 300
-
-        degats = 40 + (rand() % 21); //Entre 40 et 60
+        pv = 200 + (rand() % 101);
+        degats = 40 + (rand() % 21);
     }
-    else if (random >= 95 && random < 99)
+    else if (random < 99)
     {
         rarete = "!! LEGENDAIRE !!";
         facteurChance = 0;
-
-        pv = 300 + (rand() % 201); //Entre 300 et 500
-
-        degats = 60 + (rand() % 31); //Entre 60 et 90
+        pv = 300 + (rand() % 201);
+        degats = 60 + (rand() % 31);
     }
-    else if (random == 99)
+    else
     {
         rarete = "*** SECRET ***";
         facteurChance = 0;
-
-        pv = 500 + (rand() % 201); //Entre 500 et 700
-
-        degats = 90 + (rand() % 31); //Entre 90 et 120
+        pv = 500 + (rand() % 201);
+        degats = 90 + (rand() % 31);
     }
-
     pvMax = pv;
 }
+
+
 
 void Genimon::apparait() {
     cout << endl << "    -----Un Genimon sauvage " << rarete << " de type " << type << " apparait!-----" << endl;

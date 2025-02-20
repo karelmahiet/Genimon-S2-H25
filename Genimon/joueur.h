@@ -55,7 +55,7 @@ public:
 	int anciennePosition_y;
 	Vecteur<Genimon*> listeGenimons;
 
-	//Les bornes sont les valeurs de séparation en entre les deux terrains
+	//separation entre terrain
 	int borne_x_min;
 	int borne_y_min;
 	int borne_x_max;
