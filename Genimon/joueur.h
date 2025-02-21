@@ -7,6 +7,8 @@
 #include <thread>
 #include <vector>
 #include "vecteur.h"
+#include "genimonS.h"
+#include "gestionJeu.h"
 #include <chrono>
 #include <conio.h>
 #include <cstdlib>
@@ -33,7 +35,7 @@ public:
 	~Joueur();
 	void afficherPartie();
 	void afficherMenuPrincipal();
-	void afficherMenuGeniedex();
+	void afficherMenuGeniedex(bool afficherObjets);
 	void creerTerrain();
 	void initialiserJoueur(int pos_x, int pos_y);
 	void changerTerrain();
@@ -45,15 +47,20 @@ public:
 	void gererGenimon();
 	void ajouterGenimon(bool refresh);
 	void retirerGenimon(bool refresh);
+	void choisirStarter();
 	bool estSurGenimon();
 	bool estSurPorte();
+	void gererCapsuleVie();
+	void creerCapsuleVie(bool refresh);
+	void guerirGenimon();
 	int position_x;
 	int position_y;
 	int anciennePosition_x;
 	int anciennePosition_y;
 	Vecteur<Genimon*> listeGenimons;
+	string nom;
 
-	//Les bornes sont les valeurs de séparation en entre les deux terrains
+	//Séparation en entre les deux terrains
 	int borne_x_min;
 	int borne_y_min;
 	int borne_x_max;
@@ -65,11 +72,14 @@ private:
 	string nomTerrain;
 	bool estExterieur;
 	int nbGenimonAttrapés;
+	int nbBalles;
+	int nbCapsuleGuerison;
 
-	void gererAttrapage(Genimon* genimon, int indexGenimon, bool passageDirect);
+	void gererAttrapage(Genimon* genimon, int indexGenimon);
 	genimonChoisi choisirGenimon(Genimon* genimon, int indexFleche);
 	bool gererCombat(Genimon* genimon);
 	void afficherStatsManche(Genimon* adversaire, Genimon genimonJoueur, int bonusAdversaire, int bonusJoueur);
+	genimonChoisi choisirGuerison(int indexFleche);
 };
 
 #endif

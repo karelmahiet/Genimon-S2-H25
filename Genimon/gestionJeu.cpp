@@ -1,4 +1,4 @@
-#include "joueur.h"
+#include "gestionJeu.h"
 
 enum Etat
 {
@@ -12,6 +12,20 @@ Joueur* joueur;
 bool apparitionsPermises = false;
 bool disparitionsPermises = false;
 bool resfreshPermis = true;
+int nbCapsulesGuerisonTerrain = 0;
+
+bool evenementActif() {
+    time_t now = time(nullptr);
+
+    // On crée une structure tm locale "safe"
+    struct tm localTime;
+
+    // Sous Visual Studio/Windows, on utilise localtime_s()
+    localtime_s(&localTime, &now);
+
+    // On vérifie l'heure
+    return (localTime.tm_hour >= 17 && localTime.tm_hour < 20);
+}
 
 void afficherBienvenue()
 {
@@ -58,7 +72,18 @@ void gererInitialisation()
 
         if (touche == 'd' || touche == 'D')
         {
+            #ifdef _WIN32
+                 system("cls");
+            #endif
+
             joueur = new Joueur;
+            cout << "----------------------------------------------------------------------------------" << endl;
+            cout << "                                 Setup de la partie                               " << endl;
+            cout << "----------------------------------------------------------------------------------" << endl << endl;
+            cout << "Entrez votre nom: ";
+            cin >> joueur->nom;
+            joueur->choisirStarter();
+
             etatJeu = EnCours;
             operationFinie = true;
         }
@@ -142,7 +167,7 @@ void gererGeniedex()
     #ifdef _WIN32
         system("cls");
     #endif
-    joueur->afficherMenuGeniedex();
+    joueur->afficherMenuGeniedex(true);
     bool operationFinie = false;
 
     while (!operationFinie)
@@ -154,7 +179,7 @@ void gererGeniedex()
             #ifdef _WIN32
                    system("cls");
             #endif
-            joueur->afficherMenuGeniedex();
+            joueur->afficherMenuGeniedex(false);
             cout << "Entrer le type de Genimon que vous voulez visualiser (8 choix)" << endl;
             cout << "Informatique: --I--\nElectrique: --E--\nRobotique: --R--\nMecanique: --M--\n";
             cout << "Civil: --C--\nBatiment: --B--\nBiotech: --T--\nChimique: --Q--\n" << endl;
@@ -188,8 +213,16 @@ void gererGeniedex()
             #ifdef _WIN32
                     system("cls");
             #endif
-            joueur->afficherMenuGeniedex();
+            joueur->afficherMenuGeniedex(false);
             joueur->consulterGenidexComplet();
+        }
+        else if (touche == 'g' || touche == 'G')
+        {
+            #ifdef _WIN32
+                    system("cls");
+            #endif
+            joueur->afficherMenuGeniedex(false);
+            joueur->guerirGenimon();
         }
         else if (touche == 'f' || touche == 'F')
         {
@@ -293,6 +326,10 @@ void gererPartie()
                 resfreshPermis = false;
                 joueur->changerTerrain();
             }
+            else
+            {
+                joueur->gererCapsuleVie();
+            }
 
 
             if (toucheValide && etatJeu == EnCours)
@@ -333,11 +370,33 @@ void gererThread()
     }
 }
 
+//Capsules de vie
+void gererThread2()
+{
+    while (true) {
+        if (etatJeu == EnCours)
+        {
+            if (apparitionsPermises && nbCapsulesGuerisonTerrain < 2)
+            {
+                if ((rand() % 10) == 1)
+                {
+                    joueur->creerCapsuleVie(resfreshPermis);
+                    nbCapsulesGuerisonTerrain++;
+                }
+            }          
+        }
+
+        this_thread::sleep_for(chrono::milliseconds(20000));
+    }
+}
+
 int main()
 {
     srand(time(0));
     thread t(gererThread);
     t.detach();
+    thread t2(gererThread2);
+    t2.detach();
 
     while (true)
     {
