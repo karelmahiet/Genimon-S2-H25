@@ -131,6 +131,7 @@
     <ClCompile Include="genimonS.cpp" />
     <ClCompile Include="joueur.cpp" />
     <ClCompile Include="gestionJeu.cpp" />
+    <ClCompile Include="genimonS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="genimon.h" />
