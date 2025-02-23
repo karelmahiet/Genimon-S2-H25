@@ -328,7 +328,10 @@ void gererPartie()
             }
             else
             {
-                joueur->gererCapsuleVie();
+                if (joueur->gererCapsuleVie())
+                {
+                    nbCapsulesGuerisonTerrain--;
+                }
             }
 
 
@@ -351,11 +354,18 @@ void gererThread()
         if (etatJeu == EnCours)
         {
             if (apparitionsPermises && joueur->listeGenimons.Taille() <= maxGenimon)
-            {             
-                if ((rand() % 2) == 1)
+            {           
+                if (joueur->listeGenimons.Taille() <= maxGenimon / 3)
                 {
                     joueur->ajouterGenimon(resfreshPermis);
                 }
+                else
+                {
+                    if ((rand() % 2) == 1)
+                    {
+                        joueur->ajouterGenimon(resfreshPermis);
+                    }
+                }               
             }
             if (disparitionsPermises && joueur->listeGenimons.Taille() >= 10)
             {
@@ -376,9 +386,10 @@ void gererThread2()
     while (true) {
         if (etatJeu == EnCours)
         {
-            if (apparitionsPermises && nbCapsulesGuerisonTerrain < 2)
+            if (apparitionsPermises && nbCapsulesGuerisonTerrain < 1)
             {
-                if ((rand() % 10) == 1)
+                int choix = rand() % 6;
+                if (choix == 0)
                 {
                     joueur->creerCapsuleVie(resfreshPermis);
                     nbCapsulesGuerisonTerrain++;

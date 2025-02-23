@@ -50,7 +50,7 @@ public:
 	void choisirStarter();
 	bool estSurGenimon();
 	bool estSurPorte();
-	void gererCapsuleVie();
+	bool gererCapsuleVie();
 	void creerCapsuleVie(bool refresh);
 	void guerirGenimon();
 	int position_x;
@@ -78,7 +78,7 @@ private:
 	void gererAttrapage(Genimon* genimon, int indexGenimon);
 	genimonChoisi choisirGenimon(Genimon* genimon, int indexFleche);
 	bool gererCombat(Genimon* genimon);
-	void afficherStatsManche(Genimon* adversaire, Genimon genimonJoueur, int bonusAdversaire, int bonusJoueur);
+	void afficherStatsManche(Genimon* adversaire, Genimon genimonJoueur);
 	genimonChoisi choisirGuerison(int indexFleche);
 };
 

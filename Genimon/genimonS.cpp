@@ -59,7 +59,7 @@ GenimonS::GenimonS(char typeC, string nomC) {
     }
 
     setRareté();
-    facteurDegats = degats / 3;
+    facteurDegats = degats/4;
 }
 
 void GenimonS::setRareté()

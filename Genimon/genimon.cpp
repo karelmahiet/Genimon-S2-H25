@@ -47,7 +47,7 @@ Genimon::Genimon()
     }
 
     setRareté();
-    facteurDegats = degats/3;
+    facteurDegats = degats/4;
 }
 
 void Genimon::setNom()
