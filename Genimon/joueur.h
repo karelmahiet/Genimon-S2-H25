@@ -7,7 +7,6 @@
 #include <thread>
 #include <vector>
 #include "vecteur.h"
-#include "genimonS.h"
 #include "gestionJeu.h"
 #include <chrono>
 #include <conio.h>
@@ -45,6 +44,7 @@ public:
 	void consulterDétailsType(int typeNumérique, string type);
 	void demanderInformationsGenimon(int typeNumérique, string type);
 	void gererGenimon();
+	bool jeuReussi();
 	void ajouterGenimon(bool refresh);
 	void retirerGenimon(bool refresh);
 	void choisirStarter();
@@ -70,7 +70,8 @@ private:
 	caseGenidex genidex[8];
 	vector<Genimon> historique;
 	string nomTerrain;
-	bool estExterieur;
+	int zone;
+	int badge;
 	int nbGenimonAttrapés;
 	int nbBalles;
 	int nbCapsuleGuerison;

@@ -23,10 +23,11 @@ void Joueur::initialiserJoueur(int pos_x, int pos_y)
     borne_x_max = 21;
     borne_y_max = 21;
     nomTerrain = "         Exterieur de la faculte";
-    estExterieur = true;
+    zone = 1;
     nbGenimonAttrapés = 0;
-    nbBalles = 20;
+    nbBalles = 200;
     nbCapsuleGuerison = 0;
+	badge = 1;
 }
 
 void Joueur::choisirStarter() {
@@ -62,7 +63,7 @@ void Joueur::choisirStarter() {
             cout << "Donnez son type: ";
         }
     }
-    GenimonS* premierGenimon = new GenimonS(typeChoisi, nomChoisi);
+    Genimon* premierGenimon = new Genimon(typeChoisi, nomChoisi, 1);
     genidex[premierGenimon->getTypeNumérique()].listeGenimonAttrapé.push_back(*premierGenimon);
     nbGenimonAttrapés++;
 
@@ -91,24 +92,28 @@ void Joueur::choisirStarter() {
 
 void Joueur::changerTerrain()
 {
-    if (estExterieur)
+    if (zone ==1)
     {
         borne_x_min = 21;
         borne_y_min = 0;
         borne_x_max = 37;
         borne_y_max = 14;
         nomTerrain = "    Interieur de la faculte";
-        estExterieur = false;
+        zone = 2;
         position_x += 2;
+		if (badge == 1)
+		{
+			badge = 2;
+		}
     }
-    else
+	else if (zone == 2)
     {
         borne_x_min = 0;
         borne_y_min = 0;
         borne_x_max = 21;
         borne_y_max = 21;
         nomTerrain = "         Exterieur de la faculte";
-        estExterieur = true;
+		zone = 1;
         position_x -= 2;
     }
 }
@@ -159,7 +164,7 @@ bool Joueur::gererCapsuleVie()
 
 void Joueur::ajouterGenimon(bool refresh)
 {
-    Genimon* nouveauGenimon = new Genimon;
+    Genimon* nouveauGenimon = new Genimon(zone);
     listeGenimons.ajouterElement(nouveauGenimon);
 
     int pos_x = rand() % dimensionTerrain_x;
@@ -1218,6 +1223,31 @@ void Joueur::consulterGenidexComplet()
     cout << "Choisissez une option du menu pour lancer une autre recherche ou pour fermer le Genidex" << endl;
 }
 
+//le jeu est réussi si le joueur a capturé au moins un Genimon de chaque type
+bool Joueur::jeuReussi() {
+	for (int i = 0; i < 8; i++)
+	{
+		if (genidex[i].listeGenimonAttrapé.size() == 0)
+		{
+			return false;
+		}
+	}
+	cout << "Felicitation! Vous avez capture au moins un Genimon de chaque type!" << endl;
+	cout << "Voulez-vous continuer a jouer? (O/N)" << endl;
+	bool operationFinie = false;
+	if (_getch() == 'o' || _getch() == 'O')
+	{
+		return false;
+	}
+	else if (_getch() == 'n' || _getch() == 'N')
+	{
+		return true;
+	}
+	return true;
+}
+
+
+
 void Joueur::consulterHistorique()
 {
     cout << "----------------------------------------------------------------------------------" << endl;
@@ -1243,6 +1273,16 @@ void Joueur::afficherPartie() {
     #ifdef _WIN32
         system("cls");
     #endif
+		bool jeuReussi1 = false;
+		if (jeuReussi() == 1) {
+			jeuReussi1 = true;
+		}
+		else {
+			jeuReussi1 = false;
+        }
+        if (jeuReussi1 == 1) {
+            exit(0);
+        }
 
     afficherMenuPrincipal();
 
