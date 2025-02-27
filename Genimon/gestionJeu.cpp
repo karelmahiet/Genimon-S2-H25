@@ -17,14 +17,16 @@ int nbCapsulesGuerisonTerrain = 0;
 bool evenementActif() {
     time_t now = time(nullptr);
 
-    // On crée une structure tm locale "safe"
     struct tm localTime;
 
-    // Sous Visual Studio/Windows, on utilise localtime_s()
     localtime_s(&localTime, &now);
 
-    // On vérifie l'heure
-    return (localTime.tm_hour >= 17 && localTime.tm_hour < 20);
+    if (localTime.tm_hour >= 17 && localTime.tm_hour < 20) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 void afficherBienvenue()
@@ -35,8 +37,8 @@ void afficherBienvenue()
     cout << "          Genimons. Combattez-les pour tentez de les capturer et de les           " << endl;
     cout << "          ajouter a votre Genidex. Une aventure passionnante vous attend.         " << endl << endl;
     cout << "                                Bonne chasse!                                     " << endl << endl << endl;
-    cout << "                        Pour demarer le jeu: --D--                                " << endl;
-    cout << "                        Pour sortir du jeu: --Z--                                 " << endl << endl;
+    cout << "                        Pour demarer le jeu: --1--                                " << endl;
+    cout << "                        Pour sortir du jeu: --4--                                 " << endl << endl;
     cout << "----------------------------------------------------------------------------------" << endl;
 }
 
@@ -45,16 +47,18 @@ void afficherConfirmation()
     cout << "----------------------------------------------------------------------------------" << endl;
     cout << "                  Voulez-vous vraiment mettre fin a la partie?                    " << endl;
     cout << "                  Si vous confirmez, votre progression sera perdu.                " << endl << endl << endl;
-    cout << "                               Pour confirmer: --C--                              " << endl;
-    cout << "                               Pour annuler: --A--                                " << endl << endl;
+    cout << "                               Pour confirmer: --1--                              " << endl;
+    cout << "                               Pour annuler: --4--                                " << endl << endl;
     cout << "----------------------------------------------------------------------------------" << endl;
 }
 
 void afficherPause()
 {
     cout << "----------------------------------------------------------------------------------" << endl;
-    cout << "                                   Jeu en pause                                   " << endl << endl << endl;
-    cout << "                           Pour revenir au jeu: --ESPACE--                        " << endl << endl;
+    cout << "                                   Jeu en pause                                   " << endl << endl;
+    cout << "                         Pour sortir du jeu: --1--                                " << endl;
+    cout << "                         Pour reinitialiser le jeu: --2--                         " << endl;
+    cout << "                         Pour revenir au jeu: --4--                               " << endl << endl;
     cout << "----------------------------------------------------------------------------------" << endl;
 }
 
@@ -70,7 +74,7 @@ void gererInitialisation()
     {
         char touche = _getch();
 
-        if (touche == 'd' || touche == 'D')
+        if (touche == '1')
         {
             #ifdef _WIN32
                  system("cls");
@@ -87,7 +91,7 @@ void gererInitialisation()
             etatJeu = EnCours;
             operationFinie = true;
         }
-        else if (touche == 'z' || touche == 'Z')
+        else if (touche == '4')
         {
             etatJeu = Termine;
             operationFinie = true;
@@ -99,7 +103,7 @@ void gererInitialisation()
     }
 }
 
-void gererPause()
+void gererPause(bool *finPartie)
 {
     #ifdef _WIN32
         system("cls");
@@ -111,7 +115,15 @@ void gererPause()
     {
         char touche = _getch();
 
-        if (touche == ' ')
+        if (touche == '2') {
+            gererConfirmation(1, finPartie);
+            operationFinie = true;
+        }
+        else if (touche == '1') {
+            gererConfirmation(2, finPartie);
+            operationFinie = true;
+        }
+        else if (touche == '4')
         {
             operationFinie = true;
         }
@@ -134,7 +146,7 @@ void gererConfirmation(int option, bool* finPartie)
     {
         char touche = _getch();
 
-        if (touche == 'c' || touche == 'C')
+        if (touche == '1')
         {
             if (option == 1)
             {
@@ -147,13 +159,12 @@ void gererConfirmation(int option, bool* finPartie)
             {
                 etatJeu = Termine;
             }
-            operationFinie = true;
             *finPartie = true;
+            operationFinie = true;
         }
-        else if (touche == 'a' || touche == 'A')
+        else if (touche == '4')
         {
             operationFinie = true;
-            *finPartie = false;
         }
         else
         {
@@ -174,41 +185,68 @@ void gererGeniedex()
     {
         char touche = _getch();
 
-        if (touche == 'c' || touche == 'C')
+        if (touche == '1')
         {
-            #ifdef _WIN32
-                   system("cls");
-            #endif
-            joueur->afficherMenuGeniedex(false);
-            cout << "Entrer le type de Genimon que vous voulez visualiser (8 choix)" << endl;
-            cout << "Informatique: --I--\nElectrique: --E--\nRobotique: --R--\nMecanique: --M--\n";
-            cout << "Civil: --C--\nBatiment: --B--\nBiotech: --T--\nChimique: --Q--\n" << endl;
-
             char toucheSecondaire;
-            bool toucheValide = false;
+            bool choixFait = false;
+            bool refresh = true;
+            int indexFleche = 0;
+            string optionsType[8] = { "Informatique", "Electrique", "Robotique", "Mecanique", "Civil", "Batiment", "Biotech", "Chimique" };
 
-            while (!toucheValide)
+            while (!choixFait)
             {
-                cout << "Votre selection: ";
+                if (refresh)
+                {
+                    #ifdef _WIN32
+                              system("cls");
+                    #endif
+                    joueur->afficherMenuGeniedex(false);
+                    cout << "Choissisez le type de Genimon que vous voulez visualiser (8 choix)" << endl;
+                    cout << "Utilisez les touches w et s pour la selection" << endl << endl;
+
+                    for (int i = 0; i < 8; i++)
+                    {
+                        if (indexFleche == i)
+                        {
+                            cout << "--> ";
+                        }
+                        cout << optionsType[i] << endl;
+                    }
+
+                    cout << "\nAppuyez sur --1-- pour confirmer le choix" << endl;
+                }              
                 toucheSecondaire = _getch();
 
-                if (toucheSecondaire == 'i' || toucheSecondaire == 'I' || toucheSecondaire == 'e' || toucheSecondaire == 'E'
-                    || toucheSecondaire == 'r' || toucheSecondaire == 'R' || toucheSecondaire == 'm' || toucheSecondaire == 'M'
-                    || toucheSecondaire == 'c' || toucheSecondaire == 'C' || toucheSecondaire == 'b' || toucheSecondaire == 'B'
-                    || toucheSecondaire == 't' || toucheSecondaire == 'T' || toucheSecondaire == 'q' || toucheSecondaire == 'Q')
+                if (toucheSecondaire == 'w')
                 {
-                    toucheValide = true;
+                    if (indexFleche > 0)
+                    {
+                        --indexFleche;
+                    }
+                    refresh = true;
+                }
+                else if (toucheSecondaire == 's')
+                {
+                    if (indexFleche < 7)
+                    {
+                        ++indexFleche;
+                    }
+                    refresh = true;
+                }
+                else if (toucheSecondaire == '1')
+                {
+                    choixFait = true;
                 }
                 else
                 {
+                    refresh = false;
                     cout << "Touche invalide" << endl;
                 }
-            }
+            }           
 
-            cout << toucheSecondaire << endl;
-            joueur->consulterGenidexPartiel(toucheSecondaire);
+            joueur->consulterGenidexPartiel(indexFleche);
         }
-        else if (touche == 'e' || touche == 'E')
+        else if (touche == '2')
         {
             #ifdef _WIN32
                     system("cls");
@@ -216,7 +254,7 @@ void gererGeniedex()
             joueur->afficherMenuGeniedex(false);
             joueur->consulterGenidexComplet();
         }
-        else if (touche == 'g' || touche == 'G')
+        else if (touche == '3')
         {
             #ifdef _WIN32
                     system("cls");
@@ -224,7 +262,7 @@ void gererGeniedex()
             joueur->afficherMenuGeniedex(false);
             joueur->guerirGenimon();
         }
-        else if (touche == 'f' || touche == 'F')
+        else if (touche == '4')
         {
             operationFinie = true;
         }
@@ -247,7 +285,7 @@ void gererHistorique()
     {
         char touche = _getch();
 
-        if (touche == 'f' || touche == 'F')
+        if (touche == '4')
         {
             operationFinie = true;
         }
@@ -286,27 +324,19 @@ void gererPartie()
             else if (touche == 'w' && joueur->position_y > joueur->borne_y_min) {
                 joueur->position_y--;
             }
-            else if (touche == 'g' || touche == 'G') {
+            else if (touche == '1') {
                 resfreshPermis = false;
                 gererGeniedex();
             }
-            else if (touche == 'h' || touche == 'H') {
+            else if (touche == '2') {
                 resfreshPermis = false;
                 gererHistorique();
             }
-            else if (touche == ' ') {
+            else if (touche == '3') {
                 apparitionsPermises = false;
                 disparitionsPermises = false;
                 resfreshPermis = false;
-                gererPause();
-            }
-            else if (touche == 'r' || touche == 'R') {
-                resfreshPermis = false;
-                gererConfirmation(1, &operationFinie);
-            }
-            else if (touche == 'z' || touche == 'Z') {
-                resfreshPermis = false;
-                gererConfirmation(2, &operationFinie);
+                gererPause(&operationFinie);
             }
             else
             {

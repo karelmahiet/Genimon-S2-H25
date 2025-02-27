@@ -39,7 +39,7 @@ public:
 	void creerTerrain();
 	void initialiserJoueur(int pos_x, int pos_y);
 	void changerTerrain();
-	void consulterGenidexPartiel(char type);
+	void consulterGenidexPartiel(int type);
 	void consulterGenidexComplet();
 	void consulterHistorique();
 	void consulterDétailsType(int typeNumérique, string type);
@@ -71,7 +71,7 @@ private:
 	vector<Genimon> historique;
 	string nomTerrain;
 	bool estExterieur;
-	int nbGenimonAttrapés;
+	int nbGenimonAttrapes;
 	int nbBalles;
 	int nbCapsuleGuerison;
 

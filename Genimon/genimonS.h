@@ -8,7 +8,7 @@ class GenimonS : public Genimon
 {
 public:
 	GenimonS(char typeC, string nomC);
-	void setRareté();
+	void setRarete();
 };
 
 #endif

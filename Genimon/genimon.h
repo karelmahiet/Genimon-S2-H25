@@ -19,13 +19,13 @@ public:
 	virtual void apparait();
 	void presenter();
 	bool capture(int* nbBallesJoueur);
-	virtual void setRareté();
-	int getTypeNumérique();
+	virtual void setRarete();
+	int getTypeNumerique();
 	string getType();
-	string getTypeSupérieur();
-	string getTypeInférieur();
+	string getTypeSuperieur();
+	string getTypeInferieur();
 	string getNom();
-	string getRareté();
+	string getRarete();
 	int getRareteNumerique();
 	int getGainBalles();
 	int getPV();
@@ -40,14 +40,14 @@ protected:
 	string nom;
 	string rarete;
 	string type;
-	int typeNumérique;
+	int typeNumerique;
 	int rareteNumerique;
 	int facteurChance;
 	int gainBalles;
 
 	//variables pour les combats
-	string typeSupérieur;
-	string typeInférieur;
+	string typeSuperieur;
+	string typeInferieur;
 	int pv;
 	int degats;
 	int facteurDegats;

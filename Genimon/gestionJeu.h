@@ -9,7 +9,7 @@ void afficherBienvenue();
 void afficherConfirmation();
 void afficherPause();
 void gererInitialisation();
-void gererPause();
+void gererPause(bool* finPartie);
 void gererConfirmation(int option, bool* finPartie);
 void gererGeniedex();
 void gererHistorique();

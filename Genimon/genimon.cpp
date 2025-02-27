@@ -1,58 +1,59 @@
 #include "genimon.h"
+#include "gestionJeu.h"
 
 Genimon::Genimon()
 {
     int random = rand() % 8;
-    typeNumérique = random;
+    typeNumerique = random;
     setNom();
     if (random == 0) {
         type = "informatique";
-        typeSupérieur = "aucunI";
-        typeInférieur = "civil";
+        typeSuperieur = "aucunI";
+        typeInferieur = "civil";
     }
     else if (random == 1) {
         type = "electrique";
-        typeSupérieur = "aucunE";
-        typeInférieur = "batiment";
+        typeSuperieur = "aucunE";
+        typeInferieur = "batiment";
     }
     else if (random == 2) {
         type = "robotique";
-        typeSupérieur = "bioTech";
-        typeInférieur = "aucunR";
+        typeSuperieur = "bioTech";
+        typeInferieur = "aucunR";
     }
     else if (random == 3) {
         type = "mecanique";
-        typeSupérieur = "civil";
-        typeInférieur = "bioTech";
+        typeSuperieur = "civil";
+        typeInferieur = "bioTech";
     }
     else if (random == 4) {
         type = "civil";
-        typeSupérieur = "informatique";
-        typeInférieur = "mecanique";
+        typeSuperieur = "informatique";
+        typeInferieur = "mecanique";
     }
     else if (random == 5) {
         type = "batiment";
-        typeSupérieur = "electrique";
-        typeInférieur = "chimique";
+        typeSuperieur = "electrique";
+        typeInferieur = "chimique";
     }
     else if (random == 6) {
         type = "bioTech";
-        typeSupérieur = "mecanique";
-        typeInférieur = "robotique";
+        typeSuperieur = "mecanique";
+        typeInferieur = "robotique";
     }
     else if (random == 7) {
         type = "chimique";
-        typeSupérieur = "batiment";
-        typeInférieur = "chimique";
+        typeSuperieur = "batiment";
+        typeInferieur = "chimique";
     }
 
-    setRareté();
+    setRarete();
     facteurDegats = degats/4;
 }
 
 void Genimon::setNom()
 {
-    if (typeNumérique == 0) { // informatique
+    if (typeNumerique == 0) { // informatique
         int random = rand() % 4;
         if (random == 0)
             nom = "Jeremie";
@@ -63,7 +64,7 @@ void Genimon::setNom()
         else if (random == 3)
             nom = "Raphael";
     }
-    else if (typeNumérique == 1) { // electrique
+    else if (typeNumerique == 1) { // electrique
         int random = rand() % 4;
         if (random == 0)
             nom = "Florian";
@@ -74,7 +75,7 @@ void Genimon::setNom()
         else if (random == 3)
             nom = "Vincent";
     }
-    else if (typeNumérique == 2) { // robotique
+    else if (typeNumerique == 2) { // robotique
         int random = rand() % 4;
         if (random == 0)
             nom = "Zack";
@@ -85,7 +86,7 @@ void Genimon::setNom()
         else if (random == 3)
             nom = "Ethan";
     }
-    else if (typeNumérique == 3) { // mecanique
+    else if (typeNumerique == 3) { // mecanique
         int random = rand() % 4;
         if (random == 0)
             nom = "Eric";
@@ -96,7 +97,7 @@ void Genimon::setNom()
         else if (random == 3)
             nom = "Isabelle";
     }
-    else if (typeNumérique == 4) { // civil
+    else if (typeNumerique == 4) { // civil
         int random = rand() % 4;
         if (random == 0)
             nom = "Sammuel";
@@ -108,7 +109,7 @@ void Genimon::setNom()
             nom = "Laurianne";
 
     }
-    else if (typeNumérique == 5) { // batiment
+    else if (typeNumerique == 5) { // batiment
         int random = rand() % 4;
         if (random == 0)
             nom = "Steve";
@@ -119,7 +120,7 @@ void Genimon::setNom()
         else if (random == 3)
             nom = "Angelie";
     }
-    else if (typeNumérique == 6) { // bioTech
+    else if (typeNumerique == 6) { // bioTech
         int random = rand() % 4;
         if (random == 0)
             nom = "Philippe";
@@ -130,7 +131,7 @@ void Genimon::setNom()
         else if (random == 3)
             nom = "Mikael";
     }
-    else if (typeNumérique == 7) { // chimique
+    else if (typeNumerique == 7) { // chimique
         int random = rand() % 4;
         if (random == 0)
             nom = "Darnley";
@@ -143,61 +144,92 @@ void Genimon::setNom()
     }
 }
 
-void Genimon::setRareté()
+void Genimon::setRarete()
 {
-    int random = rand() % 100;
-    if (random < 50)
-    {
-        rarete = "COMMUN";
-        rareteNumerique = 0;
-        facteurChance = 4;
-        gainBalles = 10;
+    //bool evenement = evenementActif();
 
-        pv = 50 + (rand() % 51); //Entre 50 et 100
-        degats = 10 + (rand() % 11); //Entre 10 et 20
-    }
-    else if (random < 80)
-    {
-        rarete = "RARE";
-        rareteNumerique = 1;
-        facteurChance = 2;
-        gainBalles = 15;
+    //5@8
+    //if (evenement = true) {
+    //    int random = rand() % 100;
+    //    if (random < 50) {
 
-        pv = 100 + (rand() % 101); //Entre 100 et 200
-        degats = 20 + (rand() % 21); //Entre 20 et 40
-    }
-    else if (random < 95)
-    {
-        rarete = "EPIQUE";
-        rareteNumerique = 2;
-        facteurChance = 1;
-        gainBalles = 20;
+    //        rarete = "EPIQUE";
+    //        rareteNumerique = 2;
+    //        facteurChance = 1;
+    //        gainBalles = 20;
 
-        pv = 200 + (rand() % 101); //Entre 200 et 300
-        degats = 40 + (rand() % 21); //Entre 40 et 60
-    }
-    else if (random < 99)
-    {
-        rarete = "!! LEGENDAIRE !!";
-        rareteNumerique = 3;
-        facteurChance = 0;
-        gainBalles = 25;
+    //        pv = 200 + (rand() % 101); //Entre 200 et 300
+    //        degats = 40 + (rand() % 21); //Entre 40 et 60
+    //    }
+    //    else {
 
-        pv = 300 + (rand() % 201); //Entre 300 et 500
-        degats = 60 + (rand() % 31); //Entre 60 et 90
-    }
-    else
-    {
-        rarete = "*** SECRET ***";
-        rareteNumerique = 4;
-        facteurChance = 0;
-        gainBalles = 30;
 
-        pv = 500 + (rand() % 201); //Entre 500 et 700
-        degats = 90 + (rand() % 31); //Entre 90 et 120
-    }
+    //        rarete = "!! LEGENDAIRE !!";
+    //        rareteNumerique = 3;
+    //        facteurChance = 0;
+    //        gainBalles = 25;
 
-    pvMax = pv;
+    //        pv = 300 + (rand() % 201); //Entre 300 et 500
+    //        degats = 60 + (rand() % 31); //Entre 60 et 90
+    //    }
+    //}
+
+    //si pas 5@8, normal
+    /*else {*/
+        int random = rand() % 100;
+        if (random < 50)
+        {
+            rarete = "COMMUN";
+            rareteNumerique = 0;
+            facteurChance = 4;
+            gainBalles = 10;
+
+            pv = 50 + (rand() % 51); //Entre 50 et 100
+            degats = 10 + (rand() % 11); //Entre 10 et 20
+        }
+        else if (random < 80)
+        {
+            rarete = "RARE";
+            rareteNumerique = 1;
+            facteurChance = 2;
+            gainBalles = 15;
+
+            pv = 100 + (rand() % 101); //Entre 100 et 200
+            degats = 20 + (rand() % 21); //Entre 20 et 40
+        }
+        else if (random < 95)
+        {
+            rarete = "EPIQUE";
+            rareteNumerique = 2;
+            facteurChance = 1;
+            gainBalles = 20;
+
+            pv = 200 + (rand() % 101); //Entre 200 et 300
+            degats = 40 + (rand() % 21); //Entre 40 et 60
+        }
+        else if (random < 99)
+        {
+            rarete = "!! LEGENDAIRE !!";
+            rareteNumerique = 3;
+            facteurChance = 0;
+            gainBalles = 25;
+
+            pv = 300 + (rand() % 201); //Entre 300 et 500
+            degats = 60 + (rand() % 31); //Entre 60 et 90
+        }
+        else
+        {
+            rarete = "*** SECRET ***";
+            rareteNumerique = 4;
+            facteurChance = 0;
+            gainBalles = 30;
+
+            pv = 500 + (rand() % 201); //Entre 500 et 700
+            degats = 90 + (rand() % 31); //Entre 90 et 120
+        }
+
+        pvMax = pv;
+    //}
 }
 
 void Genimon::apparait() {
@@ -212,25 +244,25 @@ void Genimon::presenter() {
     cout << ", Degats: " << degats << endl << endl;
 }
 
-int Genimon::getTypeNumérique() {
-    return typeNumérique;
+int Genimon::getTypeNumerique() {
+    return typeNumerique;
 }
 
 string Genimon::getType() {
     return type;
 }
 
-string Genimon::getTypeSupérieur()
+string Genimon::getTypeSuperieur()
 {
-    return typeSupérieur;
+    return typeSuperieur;
 }
 
-string Genimon::getTypeInférieur()
+string Genimon::getTypeInferieur()
 {
-    return typeInférieur;
+    return typeInferieur;
 }
 
-string Genimon::getRareté() {
+string Genimon::getRarete() {
     return rarete;
 }
 
@@ -287,13 +319,13 @@ bool Genimon::capture(int* nbBallesJoueur)
         else
         {
             cout << "Nombre de balles restantes: " << *nbBallesJoueur << endl;
-            cout << "Voulez-vous le capturer? (O/N)" << endl;
+            cout << "Voulez-vous le capturer? (1 pour oui et 2 pour non)" << endl;
             bool decisionPrise = false;
             while (!decisionPrise)
             {
                 bool estCapturé = false;
                 char question = _getch();
-                if (question == 'o' || question == 'O') {
+                if (question == '1') {
                     cout << "Balle lancee!" << endl;
                     (*nbBallesJoueur)--;
                     int random = rand() % 20;
@@ -321,7 +353,7 @@ bool Genimon::capture(int* nbBallesJoueur)
                     }
                     decisionPrise = true;
                 }
-                else if (question == 'n' || question == 'N') {
+                else if (question == '2') {
                     cout << nom << " s'est enfuit..." << endl;
                     cout << endl << "-----Fin du face a face-----" << endl << endl;
                     decisionPrise = true;
