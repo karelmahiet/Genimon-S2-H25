@@ -17,14 +17,16 @@ int nbCapsulesGuerisonTerrain = 0;
 bool evenementActif() {
     time_t now = time(nullptr);
 
-    // On crée une structure tm locale "safe"
     struct tm localTime;
 
-    // Sous Visual Studio/Windows, on utilise localtime_s()
     localtime_s(&localTime, &now);
 
-    // On vérifie l'heure
-    return (localTime.tm_hour >= 17 && localTime.tm_hour < 20);
+    if (localTime.tm_hour >= 17 && localTime.tm_hour < 20) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 void afficherBienvenue()

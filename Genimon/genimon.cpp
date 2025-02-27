@@ -1,4 +1,5 @@
 #include "genimon.h"
+#include "gestionJeu.h"
 
 Genimon::Genimon()
 {
@@ -145,59 +146,91 @@ void Genimon::setNom()
 
 void Genimon::setRareté()
 {
-    int random = rand() % 100;
-    if (random < 50)
-    {
-        rarete = "COMMUN";
-        rareteNumerique = 0;
-        facteurChance = 4;
-        gainBalles = 10;
+    bool evenement = evenementActif();
 
-        pv = 50 + (rand() % 51); //Entre 50 et 100
-        degats = 10 + (rand() % 11); //Entre 10 et 20
-    }
-    else if (random < 80)
-    {
-        rarete = "RARE";
-        rareteNumerique = 1;
-        facteurChance = 2;
-        gainBalles = 15;
 
-        pv = 100 + (rand() % 101); //Entre 100 et 200
-        degats = 20 + (rand() % 21); //Entre 20 et 40
-    }
-    else if (random < 95)
-    {
-        rarete = "EPIQUE";
-        rareteNumerique = 2;
-        facteurChance = 1;
-        gainBalles = 20;
+    //5@8
+    if (evenement = true) {
+        int random = rand() % 100;
+        if (random < 50) {
 
-        pv = 200 + (rand() % 101); //Entre 200 et 300
-        degats = 40 + (rand() % 21); //Entre 40 et 60
-    }
-    else if (random < 99)
-    {
-        rarete = "!! LEGENDAIRE !!";
-        rareteNumerique = 3;
-        facteurChance = 0;
-        gainBalles = 25;
+            rarete = "EPIQUE";
+            rareteNumerique = 2;
+            facteurChance = 1;
+            gainBalles = 20;
 
-        pv = 300 + (rand() % 201); //Entre 300 et 500
-        degats = 60 + (rand() % 31); //Entre 60 et 90
-    }
-    else
-    {
-        rarete = "*** SECRET ***";
-        rareteNumerique = 4;
-        facteurChance = 0;
-        gainBalles = 30;
+            pv = 200 + (rand() % 101); //Entre 200 et 300
+            degats = 40 + (rand() % 21); //Entre 40 et 60
+        }
+        else {
 
-        pv = 500 + (rand() % 201); //Entre 500 et 700
-        degats = 90 + (rand() % 31); //Entre 90 et 120
+
+            rarete = "!! LEGENDAIRE !!";
+            rareteNumerique = 3;
+            facteurChance = 0;
+            gainBalles = 25;
+
+            pv = 300 + (rand() % 201); //Entre 300 et 500
+            degats = 60 + (rand() % 31); //Entre 60 et 90
+        }
     }
 
-    pvMax = pv;
+    //si pas 5@8, normal
+    else {
+        int random = rand() % 100;
+        if (random < 50)
+        {
+            rarete = "COMMUN";
+            rareteNumerique = 0;
+            facteurChance = 4;
+            gainBalles = 10;
+
+            pv = 50 + (rand() % 51); //Entre 50 et 100
+            degats = 10 + (rand() % 11); //Entre 10 et 20
+        }
+        else if (random < 80)
+        {
+            rarete = "RARE";
+            rareteNumerique = 1;
+            facteurChance = 2;
+            gainBalles = 15;
+
+            pv = 100 + (rand() % 101); //Entre 100 et 200
+            degats = 20 + (rand() % 21); //Entre 20 et 40
+        }
+        else if (random < 95)
+        {
+            rarete = "EPIQUE";
+            rareteNumerique = 2;
+            facteurChance = 1;
+            gainBalles = 20;
+
+            pv = 200 + (rand() % 101); //Entre 200 et 300
+            degats = 40 + (rand() % 21); //Entre 40 et 60
+        }
+        else if (random < 99)
+        {
+            rarete = "!! LEGENDAIRE !!";
+            rareteNumerique = 3;
+            facteurChance = 0;
+            gainBalles = 25;
+
+            pv = 300 + (rand() % 201); //Entre 300 et 500
+            degats = 60 + (rand() % 31); //Entre 60 et 90
+        }
+        else
+        {
+            rarete = "*** SECRET ***";
+            rareteNumerique = 4;
+            facteurChance = 0;
+            gainBalles = 30;
+
+            pv = 500 + (rand() % 201); //Entre 500 et 700
+            degats = 90 + (rand() % 31); //Entre 90 et 120
+        }
+
+        pvMax = pv;
+    }
 }
 
 void Genimon::apparait() {
