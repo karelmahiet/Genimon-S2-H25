@@ -1,9 +1,8 @@
 #include "genimon.h"
 #include <cmath>
 
-Genimon::Genimon(int badge1)
+Genimon::Genimon()
 {
-    badge = badge1;
     int random = rand() % 8;
     typeNumérique = random;
     setNom();
@@ -52,9 +51,14 @@ Genimon::Genimon(int badge1)
     facteurDegats = degats/4;
 }
 
-Genimon::Genimon(char typeC, string nomC, int rareteC) {
+Genimon::Genimon(char typeC, string nomC, int niveauC) {
     nom = nomC;
-
+    niveau = niveauC;
+    pv = niveau * 10 + (rand() % 11); //Entre niveau * 10 et niveau * 10 + 10
+    degats = niveau * 2 + (rand() % 3); //Entre niveau * 2 et niveau * 2 + 2
+    facteurDegats = degats / 4;
+    facteurChance = niveau;
+    pvMax = pv;
     if (typeC == '1') {
         type = "informatique";
         typeSupérieur = "aucunI";
@@ -109,36 +113,27 @@ Genimon::Genimon(char typeC, string nomC, int rareteC) {
         typeInférieur = "chimique";
         typeNumérique = 7;
     }
-    if (rareteC == 0) {
-        niveau = rand() % 10 + 1; //Entre 1 et 9
+   
+    if (niveauC< 10) {
         rarete = "COMMUN";
         rareteNumerique = 0;
     }
-    else if (rareteC == 1) {
-        niveau = rand() % 15 + 10; //Entre 10 et 24
+    else if (niveauC < 25) {
         rarete = "RARE";
         rareteNumerique = 1;
     }
-    else if (rareteC == 2) {
-        niveau = rand() % 20 + 25; //Entre 25 et 50
+    else if (niveauC <51) {
         rarete = "EPIQUE";
         rareteNumerique = 2;
     }
-    else if (rareteC == 3) {
-        niveau = rand() % 25 + 50; //Entre 50 et 74
+    else if (niveauC <100) {
         rarete = "!! LEGENDAIRE !!";
         rareteNumerique = 3;
     }
-    else if (rareteC == 4) {
-        niveau = rand() % 25 + 75; //Entre 75 et 99
+    else if (niveauC == 100) {
         rarete = "*** SECRET ***";
         rareteNumerique = 4;
     }
-    facteurDegats = degats / 4;
-    pv = niveau * 10 + (rand() % 11); //Entre niveau * 10 et niveau * 10 + 10
-    degats = niveau * 2 + (rand() % 3); //Entre niveau * 2 et niveau * 2 + 2
-    facteurChance = niveau;
-    pvMax = pv;
 }
 
 
@@ -328,6 +323,14 @@ void Genimon::setNiveau()
         facteurChance = niveau;
         pvMax = pv;
 }
+void Genimon::LvUp(int NiveauGagné) {
+	niveau += NiveauGagné;
+	pv = niveau * 10 + (rand() % 11); //Entre niveau * 10 et niveau * 10 + 10
+	degats = niveau * 2 + (rand() % 3); //Entre niveau * 2 et niveau * 2 + 2
+	facteurDegats = degats / 4;
+	facteurChance = niveau;
+	pvMax = pv;
+}
 
 void Genimon::apparait() {
 	cout << endl << "Un " << nom <<" " << rarete << " apparait!" << endl;
@@ -364,6 +367,11 @@ string Genimon::getTypeInférieur()
 
 string Genimon::getRareté() {
     return rarete;
+}
+
+int Genimon::getNiveau()
+{
+	return niveau;
 }
 
 int Genimon::getRareteNumerique() {

@@ -70,10 +70,9 @@ private:
 	caseGenidex genidex[8];
 	vector<Genimon> historique;
 	string nomTerrain;
-	int zone;
-	int badge;
 	int nbGenimonAttrapés;
 	int nbBalles;
+	int zone;
 	int nbCapsuleGuerison;
 
 	void gererAttrapage(Genimon* genimon, int indexGenimon);

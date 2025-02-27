@@ -15,18 +15,20 @@ using namespace std;
 class Genimon
 {
 public:
-	Genimon(int zone1);
-	Genimon(char typeC, string nomC, int rarete);
+	Genimon();
+	Genimon(char typeC, string nomC, int niveau);
 	virtual void apparait();
 	void presenter();
 	bool capture(int* nbBallesJoueur);
 	virtual void setNiveau();
+	void LvUp(int Niveau);
 	int getTypeNumérique();
 	string getType();
 	string getTypeSupérieur();
 	string getTypeInférieur();
 	string getNom();
 	string getRareté();
+	int getNiveau();
 	int getRareteNumerique();
 	int getGainBalles();
 	int getPV();
@@ -46,8 +48,6 @@ protected:
 	int rareteNumerique;
 	int facteurChance;
 	int gainBalles;
-	int badge;
-	int zone;
 
 	//variables pour les combats
 	string typeSupérieur;
