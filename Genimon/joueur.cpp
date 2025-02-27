@@ -31,36 +31,113 @@ void Joueur::initialiserJoueur(int pos_x, int pos_y)
 }
 
 void Joueur::choisirStarter() {
-    cout << "\nChoissisez votre premier Genimon" << endl;
-    cout << "Donnez son nom: ";
-    string nomChoisi;
-    cin >> nomChoisi;
-    cout << "1) Genie Informatique" << endl;
-    cout << "2) Genie Electrique" << endl;
-    cout << "3) Genie Robotique" << endl;
-    cout << "4) Genie Mecanique" << endl;
-    cout << "5) Genie Civil" << endl;
-    cout << "6) Genie du Batiment" << endl;
-    cout << "7) Genie Biotech" << endl;
-    cout << "8) Genie Chimique" << endl;
-    cout << "Donnez son type: ";
 
     char typeChoisi;
-    bool toucheValide = false;
-
-    while (!toucheValide)
-    {
-        typeChoisi = _getch();
-
-        if (typeChoisi == '1' || typeChoisi == '2' || typeChoisi == '3' || typeChoisi == '4'
-            || typeChoisi == '5' || typeChoisi == '6' || typeChoisi == '7' || typeChoisi == '8')        
+	string reponse;
+    cout << "Quel est ton nom? ";
+    string nomChoisi;
+    cin >> nomChoisi;
+	cout << "Il faut choisir ton type... " << endl <<endl<< "Repond a ces questions pour le connaitre. Tu dois repondre par OUI ou par NON a chaque question." << endl;
+	cout << "Si tu repond autre chose que OUI ou NON, tu devras choisir manuellement ton type" << endl << endl;
+    cout << "Est ce que 80% est une mauvaise note? " << endl;
+	cin >> reponse;
+    if (reponse == "oui" || reponse == "Oui" || reponse == "OUI"){
+        cout <<"Est que la physique c'est cool?" << endl;
+        cin >> reponse;
+        if (reponse == "oui" || reponse == "Oui" || reponse == "OUI")
         {
-            toucheValide = true;
+			cout << "Tu es un genie robotique" << endl;
+			typeChoisi = '3';
+
         }
-        else
+        else if (reponse == "non" || reponse == "Non" || reponse == "NON") {
+            cout << "Est ce que des trucs morts c'est cool?? " << endl;
+            cin >> reponse;
+            if (reponse == "oui" || reponse == "Oui" || reponse == "OUI")
+            {
+                cout << "Tu es un genie biotech" << endl;
+                typeChoisi = '7';
+            }
+            else if (reponse == "non" || reponse == "Non" || reponse == "NON") {
+                cout << "Tu es un genie chimique" << endl;
+                typeChoisi = '8';
+            }
+        }
+    }
+    else if (reponse == "non" || reponse == "Non" || reponse == "NON") {
+        cout << "Est ce que tu pense que les ordinateurs fonctionnent avec de l'essence? " << endl;
+        cin >> reponse;
+        if (reponse == "oui" || reponse == "Oui" || reponse == "OUI")
         {
-            cout << "Type invalide" << endl;
-            cout << "Donnez son type: ";
+			cout << "Hmmm, intéressant... " << endl;
+			cout << "Tu es un genie mécanique" << endl;
+			typeChoisi = '4';
+        }
+        else if (reponse == "non" || reponse == "Non" || reponse == "NON") {
+            cout << "Est ce que tu sais c'est quoi un Amplis-Op? " << endl; 
+			cin >> reponse;
+            if (reponse == "oui" || reponse == "Oui" || reponse == "OUI") {
+                cout << "Est ce qu'il te font peur? " << endl;
+                cin >> reponse;
+                if (reponse == "oui" || reponse == "Oui" || reponse == "OUI")
+                {
+                    cout << "Tu es un genie informatique" << endl;
+                    typeChoisi = '1';
+                }
+                else if (reponse == "non" || reponse == "Non" || reponse == "NON") {
+                    cout << "Tu es un genie électrique" << endl;
+                    typeChoisi = '2';
+                }
+                else if (reponse == "non" || reponse == "Non" || reponse == "NON") {
+                    cout << "Est ce qu t'es basic? " << endl;
+                    cin >> reponse;
+                    if (reponse == "oui" || reponse == "Oui" || reponse == "OUI")
+                    {
+                        cout << "Tu es un genie civil" << endl;
+                        typeChoisi = '5';
+                    }
+                    else if (reponse == "non" || reponse == "Non" || reponse == "NON") {
+                        cout << "Tu es un genie du batiment" << endl;
+                        typeChoisi = '6';
+                    }
+                }
+            }
+        }
+
+
+    }
+	else {
+		typeChoisi = 0;
+	}
+    if (typeChoisi == 0) {
+
+        cout << "Quel type de Genimon voulez-vous choisir?" << endl;
+        cout << "1) Genie Informatique" << endl;
+        cout << "2) Genie Electrique" << endl;
+        cout << "3) Genie Robotique" << endl;
+        cout << "4) Genie Mecanique" << endl;
+        cout << "5) Genie Civil" << endl;
+        cout << "6) Genie du Batiment" << endl;
+        cout << "7) Genie Biotech" << endl;
+        cout << "8) Genie Chimique" << endl;
+        cout << "Donnez son type: ";
+
+        bool toucheValide = false;
+
+        while (!toucheValide)
+        {
+            typeChoisi = _getch();
+
+            if (typeChoisi == '1' || typeChoisi == '2' || typeChoisi == '3' || typeChoisi == '4'
+                || typeChoisi == '5' || typeChoisi == '6' || typeChoisi == '7' || typeChoisi == '8')
+            {
+                toucheValide = true;
+            }
+            else
+            {
+                cout << "Type invalide" << endl;
+                cout << "Donnez son type: ";
+            }
         }
     }
     Genimon* premierGenimon = new Genimon(typeChoisi, nomChoisi, 1);

@@ -237,7 +237,6 @@ void Genimon::setNom()
 
 void Genimon::setNiveau()
 {
-    if (zone == 1) {
         int random = 0;
         for (int i = 0; i < 3;i++) {
             random = rand() % 100; //Entre 0 et 99
@@ -323,36 +322,11 @@ void Genimon::setNiveau()
         if (gainBalles <= 0) {
             gainBalles = 1;
         }
-    }
-    else if (zone == 2) {
-        int random = 0;
-        for (int i = 0; i < 3; i++) {
-            random = rand() % 100; //Entre 0 et 99
-        }
-        if (random < 70)
-        {
-            niveau = rand() % 15 + 10; //Entre 10 et 24
-            rarete = "Rare";
-            rareteNumerique = 1;
-        }
-        else if (random < 95)
-        {
-            niveau = rand() % 10 + 1; //Entre 1 et 9
-            rarete = "Commun";
-            rareteNumerique = 0;
-        }
-        else if (random < 100)
-        {
-            niveau = rand() % 20 + 25; //Entre 25 et 50
-            rarete = "Epique";
-            rareteNumerique = 2;
 
-        }
         pv = niveau * 10 + (rand() % 11); //Entre niveau * 10 et niveau * 10 + 10
         degats = niveau * 2 + (rand() % 3); //Entre niveau * 2 et niveau * 2 + 2
         facteurChance = niveau;
         pvMax = pv;
-    }
 }
 
 void Genimon::apparait() {

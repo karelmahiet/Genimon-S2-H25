@@ -80,8 +80,6 @@ void gererInitialisation()
             cout << "----------------------------------------------------------------------------------" << endl;
             cout << "                                 Setup de la partie                               " << endl;
             cout << "----------------------------------------------------------------------------------" << endl << endl;
-            cout << "Entrez votre nom: ";
-            cin >> joueur->nom;
             joueur->choisirStarter();
 
             etatJeu = EnCours;
