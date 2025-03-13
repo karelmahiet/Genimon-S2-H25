@@ -128,13 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="genimon.cpp" />
-    <ClCompile Include="genimonS.cpp" />
     <ClCompile Include="joueur.cpp" />
     <ClCompile Include="gestionJeu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="genimon.h" />
-    <ClInclude Include="genimonS.h" />
     <ClInclude Include="gestionJeu.h" />
     <ClInclude Include="joueur.h" />
     <ClInclude Include="unistd.h" />

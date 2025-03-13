@@ -2,7 +2,6 @@
 #define GESTIONJEU_H
 
 #include <ctime>
-#include "joueur.h"
 
 bool evenementActif();
 void afficherBienvenue();

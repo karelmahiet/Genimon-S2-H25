@@ -16,6 +16,7 @@ class Genimon
 {
 public:
 	Genimon();
+	Genimon(int typeC, string nomC);
 	virtual void apparait();
 	void presenter();
 	bool capture(int* nbBallesJoueur);

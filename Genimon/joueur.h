@@ -7,7 +7,6 @@
 #include <thread>
 #include <vector>
 #include "vecteur.h"
-#include "genimonS.h"
 #include "gestionJeu.h"
 #include <chrono>
 #include <conio.h>

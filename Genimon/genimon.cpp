@@ -51,6 +51,62 @@ Genimon::Genimon()
     facteurDegats = degats/4;
 }
 
+Genimon::Genimon(int typeC, string nomC)
+{
+    if (typeC == 0) {
+        type = "informatique";
+        typeSuperieur = "aucunI";
+        typeInferieur = "civil";
+    }
+    else if (typeC == 1) {
+        type = "electrique";
+        typeSuperieur = "aucunE";
+        typeInferieur = "batiment";
+    }
+    else if (typeC == 2) {
+        type = "robotique";
+        typeSuperieur = "bioTech";
+        typeInferieur = "aucunR";
+    }
+    else if (typeC == 3) {
+        type = "mecanique";
+        typeSuperieur = "civil";
+        typeInferieur = "bioTech";
+    }
+    else if (typeC == 4) {
+        type = "civil";
+        typeSuperieur = "informatique";
+        typeInferieur = "mecanique";
+    }
+    else if (typeC == 5) {
+        type = "batiment";
+        typeSuperieur = "electrique";
+        typeInferieur = "chimique";
+    }
+    else if (typeC == 6) {
+        type = "bioTech";
+        typeSuperieur = "mecanique";
+        typeInferieur = "robotique";
+
+    }
+    else if (typeC == 7) {
+        type = "chimique";
+        typeSuperieur = "batiment";
+        typeInferieur = "chimique";
+    }
+
+    typeNumerique = typeC;
+    nom = nomC;
+    rarete = "RARE";
+    rareteNumerique = 1;
+    facteurChance = 2;
+    gainBalles = 15;
+    pv = 100 + (rand() % 101); //Entre 100 et 200
+    degats = 20 + (rand() % 21); //Entre 20 et 40
+    facteurDegats = degats / 4;
+    pvMax = pv;
+}
+
 void Genimon::setNom()
 {
     if (typeNumerique == 0) { // informatique

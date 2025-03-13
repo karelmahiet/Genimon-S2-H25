@@ -1,4 +1,5 @@
 #include "gestionJeu.h"
+#include "joueur.h"
 
 enum Etat
 {
@@ -32,8 +33,8 @@ bool evenementActif() {
 void afficherBienvenue()
 {
     cout << "----------------------------------------------------------------------------------" << endl;
-    cout << "                            Bienvenu dans Genimon!                                " << endl << endl;
-    cout << "          Promenez-vous dans la faculte de genie et rencontrer des                " << endl;
+    cout << "                            Bienvenue dans Genimon!                                " << endl << endl;
+    cout << "          Promenez-vous dans la faculte de genie et rencontrez des                " << endl;
     cout << "          Genimons. Combattez-les pour tentez de les capturer et de les           " << endl;
     cout << "          ajouter a votre Genidex. Une aventure passionnante vous attend.         " << endl << endl;
     cout << "                                Bonne chasse!                                     " << endl << endl << endl;

@@ -29,58 +29,200 @@ void Joueur::initialiserJoueur(int pos_x, int pos_y)
     nbCapsuleGuerison = 0;
 }
 
-void Joueur::choisirStarter() {
-    cout << "\nChoissisez votre premier Genimon" << endl;
-    cout << "Donnez son nom: ";
+void Joueur::choisirStarter()
+{
+    int typeChoisi;
+    char touche;
     string nomChoisi;
+
+    cout << "\nEntrez le nom de votre premier Genimon:  ";
     cin >> nomChoisi;
-    cout << "1) Genie Informatique" << endl;
-    cout << "2) Genie Electrique" << endl;
-    cout << "3) Genie Robotique" << endl;
-    cout << "4) Genie Mecanique" << endl;
-    cout << "5) Genie Civil" << endl;
-    cout << "6) Genie du Batiment" << endl;
-    cout << "7) Genie Biotech" << endl;
-    cout << "8) Genie Chimique" << endl;
-    cout << "Donnez son type: ";
+    cout << "\nPour determiner son type, repondez a ce petit quiz pour qu'il puisse vous representer." << endl;
+    cout << "Vous devez repondre par oui (1) ou par non (2) a chaque question." << endl;
+    cout << "Premierement voulez-vous repondre au quiz? Sinon un type aleatoire sera choisi." << endl << endl;
 
-    char typeChoisi;
-    bool toucheValide = false;
-
-    while (!toucheValide)
+    bool toucheValide0 = false;
+    while (!toucheValide0)
     {
-        typeChoisi = _getch();
-
-        if (typeChoisi == '1' || typeChoisi == '2' || typeChoisi == '3' || typeChoisi == '4'
-            || typeChoisi == '5' || typeChoisi == '6' || typeChoisi == '7' || typeChoisi == '8')        
+        touche = _getch();
+        if (touche == '1')
         {
-            toucheValide = true;
+            cout << "----Debut du quiz----" << endl;
+
+            cout << "Est ce que 80% est une mauvaise note? " << endl;
+            bool toucheValide1 = false;
+            while (!toucheValide1)
+            {
+                touche = _getch();
+                if (touche == '1') {
+                    cout << "Est que la physique c'est cool?" << endl;
+                    bool toucheValide2 = false;
+                    while (!toucheValide2)
+                    {
+                        touche = _getch();
+                        if (touche == '1')
+                        {
+                            cout << "Tu es un genie robotique" << endl;
+                            typeChoisi = 2;
+                            toucheValide2 = true;
+                        }
+                        else if (touche == '2') {
+                            cout << "Est ce que des trucs morts c'est cool?? " << endl;
+
+                            bool toucheValide3 = false;
+                            while (!toucheValide3)
+                            {
+                                touche = _getch();
+                                if (touche == '1')
+                                {
+                                    cout << "Tu es un genie biotech" << endl;
+                                    typeChoisi = 6;
+                                    toucheValide3 = true;
+                                }
+                                else if (touche == '2') {
+                                    cout << "Tu es un genie chimique" << endl;
+                                    typeChoisi = 7;
+                                    toucheValide3 = true;
+                                }
+                                else
+                                {
+                                    cout << "Touche invalide" << endl;
+                                }
+                            }
+                            toucheValide2 = true;
+                        }
+                        else
+                        {
+                            cout << "Touche invalide" << endl;
+                        }
+                    }
+
+                    toucheValide1 = true;
+                }
+                else if (touche == '2') {
+                    cout << "Est ce que tu pense que les ordinateurs fonctionnent avec de l'essence? " << endl;
+
+                    bool toucheValide2 = false;
+                    while (!toucheValide2)
+                    {
+                        touche = _getch();
+                        if (touche == '1')
+                        {
+                            cout << "Hmmm, interessant... " << endl;
+                            cout << "Tu es un genie mecanique" << endl;
+                            typeChoisi = 3;
+                            toucheValide2 = true;
+                        }
+                        else if (touche == '2') {
+                            cout << "Est ce que tu sais c'est quoi un Amplis-Op? " << endl;
+
+                            bool toucheValide3 = false;
+                            while (!toucheValide3)
+                            {
+                                touche = _getch();
+                                if (touche == '1') {
+                                    cout << "Est ce qu'il te font peur? " << endl;
+
+                                    bool toucheValide4 = false;
+                                    while (!toucheValide4)
+                                    {
+                                        touche = _getch();
+                                        if (touche == '1')
+                                        {
+                                            cout << "Tu es un genie informatique" << endl;
+                                            typeChoisi = 0;
+                                            toucheValide4 = true;
+                                        }
+                                        else if (touche == '2') {
+                                            cout << "Tu es un genie electrique" << endl;
+                                            typeChoisi = 1;
+                                            toucheValide4 = true;
+                                        }
+                                        else
+                                        {
+                                            cout << "Touche invalide" << endl;
+                                        }
+                                    }
+                                    toucheValide3 = true;
+                                }
+                                else if (touche == '2') {
+                                    cout << "Est ce qu t'es basic? " << endl;
+
+                                    bool toucheValide4 = false;
+                                    while (!toucheValide4)
+                                    {
+                                        touche = _getch();
+                                        if (touche == '1')
+                                        {
+                                            cout << "Tu es un genie civil" << endl;
+                                            typeChoisi = 4;
+                                            toucheValide4 = true;
+                                        }
+                                        else if (touche == '2') {
+                                            cout << "Tu es un genie du batiment" << endl;
+                                            typeChoisi = 5;
+                                            toucheValide4 = true;
+                                        }
+                                        else
+                                        {
+                                            cout << "Touche invalide" << endl;
+                                        }
+                                    }
+                                    toucheValide3 = true;
+                                }
+                                else
+                                {
+                                    cout << "Touche invalide" << endl;
+                                }
+                            }
+                            toucheValide2 = true;
+                        }
+                        else
+                        {
+                            cout << "Touche invalide" << endl;
+                        }
+                    }
+
+                    toucheValide1 = true;
+                }
+                else
+                {
+                    cout << "Touche invalide" << endl;
+                }
+            }
+
+            toucheValide0 = true;
+        }
+        else if (touche == '2')
+        {
+            typeChoisi = rand() % 8;
+            cout << "Type aleatoire choisi" << endl;
+            toucheValide0 = true;
         }
         else
         {
-            cout << "Type invalide" << endl;
-            cout << "Donnez son type: ";
+            cout << "Touche invalide" << endl;
         }
     }
-    GenimonS* premierGenimon = new GenimonS(typeChoisi, nomChoisi);
+
+    Genimon* premierGenimon = new Genimon(typeChoisi, nomChoisi);
     genidex[premierGenimon->getTypeNumerique()].listeGenimonAttrapé.push_back(*premierGenimon);
     nbGenimonAttrapes++;
 
-    cout << "\n\nVotre premier Genimon est " << premierGenimon->getNom() << ", Type: " << premierGenimon->getType();
+    cout << "\nVotre premier Genimon est " << premierGenimon->getNom() << ", Type: " << premierGenimon->getType();
     cout << ", Rarete: " << premierGenimon->getRarete() << ", PV: " << premierGenimon->getPV();
     cout << ", Degats: " << premierGenimon->getDegats() << endl << endl;
 
     cout << "Appuyez sur --1-- pour lancer la partie" << endl;
 
-    char touche;
-    bool toucheValide2 = false;
-    while (!toucheValide2)
+    bool toucheValide5 = false;
+    while (!toucheValide5)
     {
         touche = _getch();
 
         if (touche == '1')
         {
-            toucheValide2 = true;
+            toucheValide5 = true;
         }
         else
         {
