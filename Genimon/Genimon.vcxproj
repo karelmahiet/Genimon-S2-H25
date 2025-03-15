@@ -130,11 +130,14 @@
     <ClCompile Include="genimon.cpp" />
     <ClCompile Include="joueur.cpp" />
     <ClCompile Include="gestionJeu.cpp" />
+    <ClCompile Include="SerialPort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="genimon.h" />
     <ClInclude Include="gestionJeu.h" />
     <ClInclude Include="joueur.h" />
+    <ClInclude Include="json.hpp" />
+    <ClInclude Include="SerialPort.hpp" />
     <ClInclude Include="unistd.h" />
     <ClInclude Include="vecteur.h" />
   </ItemGroup>

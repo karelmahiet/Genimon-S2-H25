@@ -31,8 +31,10 @@ void Joueur::initialiserJoueur(int pos_x, int pos_y)
 
 void Joueur::choisirStarter()
 {
+    extern bool bouton1_On;
+    extern bool bouton2_On;
+    extern int numBouton;
     int typeChoisi;
-    char touche;
     string nomChoisi;
 
     cout << "\nEntrez le nom de votre premier Genimon:  ";
@@ -41,168 +43,87 @@ void Joueur::choisirStarter()
     cout << "Vous devez repondre par oui (1) ou par non (2) a chaque question." << endl;
     cout << "Premierement voulez-vous repondre au quiz? Sinon un type aleatoire sera choisi." << endl << endl;
 
-    bool toucheValide0 = false;
-    while (!toucheValide0)
+    while (!bouton1_On && !bouton2_On);
+
+    if (numBouton == 1)
     {
-        touche = _getch();
-        if (touche == '1')
-        {
-            cout << "----Debut du quiz----" << endl;
+        cout << "----Debut du quiz----" << endl;
+        cout << "Est ce que 80% est une mauvaise note? " << endl;   
+        while (!bouton1_On && !bouton2_On);
 
-            cout << "Est ce que 80% est une mauvaise note? " << endl;
-            bool toucheValide1 = false;
-            while (!toucheValide1)
+        if (numBouton == 1) {
+            cout << "Est que la physique c'est cool?" << endl;     
+            while (!bouton1_On && !bouton2_On);
+
+            if (numBouton == 1)
             {
-                touche = _getch();
-                if (touche == '1') {
-                    cout << "Est que la physique c'est cool?" << endl;
-                    bool toucheValide2 = false;
-                    while (!toucheValide2)
-                    {
-                        touche = _getch();
-                        if (touche == '1')
-                        {
-                            cout << "Tu es un genie robotique" << endl;
-                            typeChoisi = 2;
-                            toucheValide2 = true;
-                        }
-                        else if (touche == '2') {
-                            cout << "Est ce que des trucs morts c'est cool?? " << endl;
+                cout << "Tu es un genie robotique" << endl;
+                typeChoisi = 2;
+            }
+            else {
+                cout << "Est ce que des trucs morts c'est cool?? " << endl;
+                while (!bouton1_On && !bouton2_On);
 
-                            bool toucheValide3 = false;
-                            while (!toucheValide3)
-                            {
-                                touche = _getch();
-                                if (touche == '1')
-                                {
-                                    cout << "Tu es un genie biotech" << endl;
-                                    typeChoisi = 6;
-                                    toucheValide3 = true;
-                                }
-                                else if (touche == '2') {
-                                    cout << "Tu es un genie chimique" << endl;
-                                    typeChoisi = 7;
-                                    toucheValide3 = true;
-                                }
-                                else
-                                {
-                                    cout << "Touche invalide" << endl;
-                                }
-                            }
-                            toucheValide2 = true;
-                        }
-                        else
-                        {
-                            cout << "Touche invalide" << endl;
-                        }
-                    }
-
-                    toucheValide1 = true;
-                }
-                else if (touche == '2') {
-                    cout << "Est ce que tu pense que les ordinateurs fonctionnent avec de l'essence? " << endl;
-
-                    bool toucheValide2 = false;
-                    while (!toucheValide2)
-                    {
-                        touche = _getch();
-                        if (touche == '1')
-                        {
-                            cout << "Hmmm, interessant... " << endl;
-                            cout << "Tu es un genie mecanique" << endl;
-                            typeChoisi = 3;
-                            toucheValide2 = true;
-                        }
-                        else if (touche == '2') {
-                            cout << "Est ce que tu sais c'est quoi un Amplis-Op? " << endl;
-
-                            bool toucheValide3 = false;
-                            while (!toucheValide3)
-                            {
-                                touche = _getch();
-                                if (touche == '1') {
-                                    cout << "Est ce qu'il te font peur? " << endl;
-
-                                    bool toucheValide4 = false;
-                                    while (!toucheValide4)
-                                    {
-                                        touche = _getch();
-                                        if (touche == '1')
-                                        {
-                                            cout << "Tu es un genie informatique" << endl;
-                                            typeChoisi = 0;
-                                            toucheValide4 = true;
-                                        }
-                                        else if (touche == '2') {
-                                            cout << "Tu es un genie electrique" << endl;
-                                            typeChoisi = 1;
-                                            toucheValide4 = true;
-                                        }
-                                        else
-                                        {
-                                            cout << "Touche invalide" << endl;
-                                        }
-                                    }
-                                    toucheValide3 = true;
-                                }
-                                else if (touche == '2') {
-                                    cout << "Est ce qu t'es basic? " << endl;
-
-                                    bool toucheValide4 = false;
-                                    while (!toucheValide4)
-                                    {
-                                        touche = _getch();
-                                        if (touche == '1')
-                                        {
-                                            cout << "Tu es un genie civil" << endl;
-                                            typeChoisi = 4;
-                                            toucheValide4 = true;
-                                        }
-                                        else if (touche == '2') {
-                                            cout << "Tu es un genie du batiment" << endl;
-                                            typeChoisi = 5;
-                                            toucheValide4 = true;
-                                        }
-                                        else
-                                        {
-                                            cout << "Touche invalide" << endl;
-                                        }
-                                    }
-                                    toucheValide3 = true;
-                                }
-                                else
-                                {
-                                    cout << "Touche invalide" << endl;
-                                }
-                            }
-                            toucheValide2 = true;
-                        }
-                        else
-                        {
-                            cout << "Touche invalide" << endl;
-                        }
-                    }
-
-                    toucheValide1 = true;
-                }
-                else
+                if (numBouton == 1)
                 {
-                    cout << "Touche invalide" << endl;
+                    cout << "Tu es un genie biotech" << endl;
+                    typeChoisi = 6;
+                }
+                else {
+                    cout << "Tu es un genie chimique" << endl;
+                    typeChoisi = 7;
                 }
             }
+        }
+        else {
+            cout << "Est ce que tu pense que les ordinateurs fonctionnent avec de l'essence? " << endl;
+            while (!bouton1_On && !bouton2_On);
 
-            toucheValide0 = true;
+            if (numBouton == 1)
+            {
+                cout << "Hmmm, interessant... " << endl;
+                cout << "Tu es un genie mecanique" << endl;
+                typeChoisi = 3;
+            }
+            else {
+                cout << "Est ce que tu sais c'est quoi un Amplis-Op? " << endl;
+                while (!bouton1_On && !bouton2_On);
+
+                if (numBouton == 1) {
+                    cout << "Est ce qu'il te font peur? " << endl;
+                    while (!bouton1_On && !bouton2_On);
+
+                    if (numBouton == 1)
+                    {
+                        cout << "Tu es un genie informatique" << endl;
+                        typeChoisi = 0;
+                    }
+                    else {
+                        cout << "Tu es un genie electrique" << endl;
+                        typeChoisi = 1;
+                    }
+                }
+                else {
+                    cout << "Est ce qu t'es basic? " << endl;
+                    while (!bouton1_On && !bouton2_On);
+
+                    if (numBouton == 1)
+                    {
+                        cout << "Tu es un genie civil" << endl;
+                        typeChoisi = 4;
+                    }
+                    else {
+                        cout << "Tu es un genie du batiment" << endl;
+                        typeChoisi = 5;
+                    }
+                }
+            }
         }
-        else if (touche == '2')
-        {
-            typeChoisi = rand() % 8;
-            cout << "Type aleatoire choisi" << endl;
-            toucheValide0 = true;
-        }
-        else
-        {
-            cout << "Touche invalide" << endl;
-        }
+    }
+    else
+    {
+        typeChoisi = rand() % 8;
+        cout << "Type aleatoire choisi" << endl;
     }
 
     Genimon* premierGenimon = new Genimon(typeChoisi, nomChoisi);
@@ -215,20 +136,7 @@ void Joueur::choisirStarter()
 
     cout << "Appuyez sur --1-- pour lancer la partie" << endl;
 
-    bool toucheValide5 = false;
-    while (!toucheValide5)
-    {
-        touche = _getch();
-
-        if (touche == '1')
-        {
-            toucheValide5 = true;
-        }
-        else
-        {
-            cout << "Touche invalide" << endl;
-        }
-    }
+    while (!bouton1_On);
 }
 
 void Joueur::changerTerrain()
@@ -370,6 +278,10 @@ void Joueur::gererGenimon()
 
     if (genimonTrouve)
     {
+        extern bool bouton1_On;
+        extern bool bouton2_On;
+        extern bool bouton4_On;
+        extern int numBouton;
         historique.push_back(*genimon);
 
         #ifdef _WIN32
@@ -378,77 +290,34 @@ void Joueur::gererGenimon()
         genimon->apparait();
 
         cout << "\nAppuyer sur --1-- pour l'attraper, sur --2-- pour le combattre ou sur --4-- pour quitter" << endl;
+        while (!bouton1_On && !bouton2_On && !bouton4_On);
 
-        bool decisionPrise = false;
-        char touche;
-        while (!decisionPrise)
+        if (numBouton == 1)
         {
-            touche = _getch();
-            if (touche == '1')
+            if (nbBalles <= 0)
             {
-                if (nbBalles <= 0)
-                {
-                    cout << "Vous n'avez aucune balle, la capture est impossible. Allez combattre des Genimons pour essayer de gagner plus de balles" << endl << endl;
-                    cout << "Appuyez sur --4-- pour retourner au jeu" << endl;
-                    bool operationFinie = false;
-
-                    while (!operationFinie)
-                    {
-                        char toucheSecondaire = _getch();
-
-                        if (toucheSecondaire == '4')
-                        {
-                            operationFinie = true;
-                        }
-                        else
-                        {
-                            cout << "Touche invalide" << endl;
-                            cout << "Appuyez sur --4-- pour retourner au jeu" << endl;
-                        }
-                    }
-                }
-                else
-                {
-                    gererAttrapage(genimon, indexGenimon);
-                }              
-                decisionPrise = true;
-            }
-            else if (touche == '2')
-            {
-                if (nbGenimonAttrapes <= 0)
-                {
-                    cout << "Votre Genidex est vide, donc vous ne pouvez pas combattre. Allez capturer des Genimons sur la faculte" << endl << endl;
-                    cout << "Appuyez sur --4-- pour retourner au jeu" << endl;
-                    bool operationFinie = false;
-
-                    while (!operationFinie)
-                    {
-                        char toucheSecondaire = _getch();
-
-                        if (toucheSecondaire == '4')
-                        {
-                            operationFinie = true;
-                        }
-                        else
-                        {
-                            cout << "Touche invalide" << endl;
-                            cout << "Appuyez sur --4-- pour retourner au jeu" << endl;
-                        }
-                    }
-                }               
-                else
-                {
-                    gererCombat(genimon);
-                }             
-                decisionPrise = true;
-            }
-            else if (touche == '4')
-            {
-                decisionPrise = true;
+                cout << "Vous n'avez aucune balle, la capture est impossible. Allez combattre des Genimons pour essayer de gagner plus de balles" << endl << endl;
+                cout << "Appuyez sur --4-- pour retourner au jeu" << endl;
+                
+                while(!bouton4_On);
             }
             else
             {
-                cout << "Touche invalide" << endl;
+                gererAttrapage(genimon, indexGenimon);
+            }
+        }
+        else if (numBouton == 2)
+        {
+            if (nbGenimonAttrapes <= 0)
+            {
+                cout << "Votre Genidex est vide, donc vous ne pouvez pas combattre. Allez capturer des Genimons sur la faculte" << endl << endl;
+                cout << "Appuyez sur --4-- pour retourner au jeu" << endl;
+                
+                while (!bouton4_On);
+            }
+            else
+            {
+                gererCombat(genimon);
             }
         }
     }
@@ -499,6 +368,13 @@ void Joueur::afficherStatsManche(Genimon* adversaire, Genimon genimonJoueur)
 
 bool Joueur::gererCombat(Genimon* genimon)
 {
+    extern bool bouton1_On;
+    extern bool bouton2_On;
+    extern bool bouton3_On;
+    extern bool bouton4_On;
+    extern bool joystick_On;
+    extern int numBouton;
+    extern string posJoystick;
     bool victoire = false;
 
     //Partie choix
@@ -510,47 +386,49 @@ bool Joueur::gererCombat(Genimon* genimon)
 
     while (!operationFinie)
     {
-        char touche = _getch();
+        while (!bouton1_On && !bouton4_On && !joystick_On);
 
-        if (touche == 'w' || touche == 'W')
+        if (joystick_On)
         {
-            if (indexFleche > 1)
+            if (posJoystick == "nord")
             {
-                --indexFleche;
+                if (indexFleche > 1)
+                {
+                    --indexFleche;
+                }
+                infos = choisirGenimon(genimon, indexFleche);
             }
-            infos = choisirGenimon(genimon, indexFleche);
-        }
-        else if (touche == 's' || touche == 'S')
-        {
-            if (indexFleche < nbGenimonAttrapes)
+            else if (posJoystick == "sud")
             {
-                ++indexFleche;
+                if (indexFleche < nbGenimonAttrapes)
+                {
+                    ++indexFleche;
+                }
+                infos = choisirGenimon(genimon, indexFleche);
             }
-            infos = choisirGenimon(genimon, indexFleche);
-        }
-        else if (touche == '4')
-        {
-            annulationCombat = true;
-            operationFinie = true;
-        }
-        else if (touche == '1')
-        {
-            if (genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].getPV() == 0)
-            {
-                cout << "Vous ne pouvez pas utiliser un Genimon KO. Veuillez en choisir un autre ou abandonnez le combat" << endl;
-            }
-            else if (genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].getRareteNumerique() > genimon->getRareteNumerique())
-            {
-                cout << "Vous ne pouvez pas utiliser un Genimon de rarete superieure a celle de l'adversaire. Veuillez en choisir un autre ou abandonnez le combat" << endl;
-            }
-            else
-            {
-                operationFinie = true;
-            }         
         }
         else
         {
-            cout << "Touche invalide" << endl;
+            if (numBouton == 4)
+            {
+                annulationCombat = true;
+                operationFinie = true;
+            }
+            else
+            {
+                if (genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].getPV() == 0)
+                {
+                    cout << "Vous ne pouvez pas utiliser un Genimon KO. Veuillez en choisir un autre ou abandonnez le combat" << endl;
+                }
+                else if (genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].getRareteNumerique() > genimon->getRareteNumerique())
+                {
+                    cout << "Vous ne pouvez pas utiliser un Genimon de rarete superieure a celle de l'adversaire. Veuillez en choisir un autre ou abandonnez le combat" << endl;
+                }
+                else
+                {
+                    operationFinie = true;
+                }
+            }
         }
     }
 
@@ -668,76 +546,52 @@ bool Joueur::gererCombat(Genimon* genimon)
                 
                 while(nbToursJoueur > 0)
                 {
-                    bool toucheValide = false;
-                    char touche;
+                    while (!bouton1_On && !bouton2_On && !bouton3_On && !bouton4_On);
 
-                    while (!toucheValide)
+                    if (numBouton == 1)
                     {
-                        touche = _getch();
-
-                        if (touche == '1')
+                        cout << "*Ajout d'une attaque" << endl;
+                        nbAttaquesJoueur++;
+                        nbToursJoueur--;
+                    }
+                    else  if (numBouton == 2)
+                    {
+                        cout << "*Ajout d'un bouclier" << endl;
+                        nbBoucliersJoueur++;
+                        nbToursJoueur--;
+                    }
+                    else  if (numBouton == 3)
+                    {
+                        if (nbBonusJoueur < 4)
                         {
-                            cout << "*Ajout d'une attaque" << endl;
-                            nbAttaquesJoueur++;
-                            nbToursJoueur--;         
-                            toucheValide = true;
-                        }
-                        else  if (touche == '2')
-                        {
-                            cout << "*Ajout d'un bouclier" << endl;
-                            nbBoucliersJoueur++;
+                            cout << "*Ajout d'un bonus" << endl;
+                            nbBonusJoueur++;
                             nbToursJoueur--;
-                            toucheValide = true;
-                        }
-                        else  if (touche == '3')
-                        {
-                            if (nbBonusJoueur < 4)
-                            {
-                                cout << "*Ajout d'un bonus" << endl;
-                                nbBonusJoueur++;
-                                nbToursJoueur--;
-                                toucheValide = true;
-                            }       
-                            else
-                            {
-                                cout << "Vous avez atteint le maximum de bonus joueur. Choissisez une autre option" << endl;
-                                cout << "Appuyez sur --1-- pour attaquer, sur --2-- pour bloquer, sur --3-- pour accumuler un bonus ou sur --4-- pour quitter le combat" << endl;
-                                toucheValide = true;
-                            }
-                        }
-                        else  if (touche == '4')
-                        {
-                            cout << "Voulez-vous vraiment quitter le combat? Les PV perdus ne sont pas restaure. (1 pour oui et 2 pour non)" << endl;
-                            bool operationFinie = false;
-
-                            while (!operationFinie)
-                            {
-                                char touche = _getch();
-
-                                if (touche == '1')
-                                {
-                                    cout << "---Le joueur abandonne le combat---" << endl;
-                                    toucheValide = true;
-                                    unGenimonMort = true;
-                                    nbToursJoueur = 0;
-                                    std::this_thread::sleep_for(std::chrono::seconds(2));
-
-                                    operationFinie = true;
-                                }
-                                else if (touche == '2')
-                                {
-                                    cout << "Appuyez sur --1-- pour attaquer, sur --2-- pour bloquer, sur --3-- pour accumuler un bonus ou sur --4-- pour quitter le combat" << endl;
-                                    operationFinie = true;
-                                }
-                                else
-                                {
-                                    cout << "Touche invalide" << endl;
-                                }
-                            }
                         }
                         else
                         {
-                            cout << "Touche invalide" << endl;
+                            cout << "Vous avez atteint le maximum de bonus joueur. Choissisez une autre option" << endl;
+                            cout << "Appuyez sur --1-- pour attaquer, sur --2-- pour bloquer, sur --3-- pour accumuler un bonus ou sur --4-- pour quitter le combat" << endl;
+                        }
+                    }
+                    else
+                    {
+                        cout << "Voulez-vous vraiment quitter le combat? Les PV perdus ne sont pas restaure. (1 pour oui et 2 pour non)" << endl;
+                        while (!bouton1_On && !bouton2_On);
+
+                        if (numBouton == 1)
+                        {
+                            cout << "---Le joueur abandonne le combat---" << endl;
+                            unGenimonMort = true;
+                            nbToursJoueur = 0;
+                            std::this_thread::sleep_for(std::chrono::seconds(2));
+
+                            operationFinie = true;
+                        }
+                        else
+                        {
+                            cout << "Appuyez sur --1-- pour attaquer, sur --2-- pour bloquer, sur --3-- pour accumuler un bonus ou sur --4-- pour quitter le combat" << endl;
+                            operationFinie = true;
                         }
                     }
                 }                                  
@@ -1070,22 +924,8 @@ bool Joueur::gererCombat(Genimon* genimon)
             }
         }
 
-        bool retourJeu = false;
-        char touche;
         cout << "Appuyez sur --4-- pour quitter le combat" << endl;
-        while (!retourJeu)
-        {
-            touche = _getch();
-            if (touche == '4')
-            {
-                retourJeu = true;
-            }
-            else
-            {
-                cout << "Touche invalide" << endl;
-                cout << "Appuyez sur --4-- pour quitter le combat" << endl;
-            }
-        }
+        while (!bouton4_On);
     }
     else
     {
@@ -1098,6 +938,7 @@ bool Joueur::gererCombat(Genimon* genimon)
 
 void Joueur::gererAttrapage(Genimon* genimon, int indexGenimon)
 {
+    extern bool bouton4_On;
     #ifdef _WIN32
         system("cls");
     #endif
@@ -1118,23 +959,8 @@ void Joueur::gererAttrapage(Genimon* genimon, int indexGenimon)
 
     listeGenimons.retirerElement(indexGenimon); //Le genimon n'est plus sur le terrain
 
-    //Gère le retour au jeu
-    bool retourJeu = false;
-    char touche;
     cout << "Appuyez sur --4-- pour revenir au jeu" << endl;
-    while (!retourJeu)
-    {
-        touche = _getch();
-        if (touche == '4')
-        {
-            retourJeu = true;
-        }
-        else
-        {
-            cout << "Touche invalide" << endl;
-            cout << "Appuyez sur --4-- pour revenir au jeu" << endl;
-        }
-    }
+    while (!bouton4_On);
 }
 
 void Joueur::consulterDétailsType(int typeNumérique, string type)
@@ -1159,31 +985,31 @@ void Joueur::consulterDétailsType(int typeNumérique, string type)
 
 void Joueur::demanderInformationsGenimon(int typeNumérique, string type)
 {
-    cout << "Voulez-vous consulter les informations de chaque Genimon? (1 pour oui et 2 pour non)" << endl;
-    bool operationFinie = false;
+    extern bool bouton1_On;
+    extern bool bouton2_On;
+    extern int numBouton;
 
-    while (!operationFinie)
+    cout << "Voulez-vous consulter les informations de chaque Genimon? (1 pour oui et 2 pour non)" << endl;
+    while (!bouton1_On && !bouton2_On);
+
+    if (numBouton == 1)
     {
-        char touche = _getch();
-        if (touche == '1')
-        {
-            consulterDétailsType(typeNumérique, type);
-            operationFinie = true;
-        }
-        else if (touche == '2')
-        {
-            cout << "----Informations non desires----" << endl << endl;
-            operationFinie = true;
-        }
-        else
-        {
-            cout << "Touche invalide" << endl;
-        }
+        consulterDétailsType(typeNumérique, type);
+    }
+    else
+    {
+        cout << "----Informations non desires----" << endl << endl;
     }
 }
 
 void Joueur::guerirGenimon()
 {
+    extern bool bouton1_On;
+    extern bool bouton4_On;
+    extern bool joystick_On;
+    extern int numBouton;
+    extern string posJoystick;
+
     bool operationFinie = false;
     int indexFleche = 1;
     genimonChoisi infos;
@@ -1193,55 +1019,57 @@ void Joueur::guerirGenimon()
         infos = choisirGuerison(indexFleche);
         while (!operationFinie)
         {
-            char touche = _getch();
+            while (!bouton1_On && !bouton4_On && !joystick_On);
 
-            if (touche == 'w' || touche == 'W')
+            if (joystick_On)
             {
-                if (indexFleche > 1)
+                if (posJoystick == "nord")
                 {
-                    --indexFleche;
+                    if (indexFleche > 1)
+                    {
+                        --indexFleche;
+                    }
+                    infos = choisirGuerison(indexFleche);
                 }
-                infos = choisirGuerison(indexFleche);
-            }
-            else if (touche == 's' || touche == 'S')
-            {
-                if (indexFleche < nbGenimonAttrapes)
+                else if (posJoystick == "sud")
                 {
-                    ++indexFleche;
+                    if (indexFleche < nbGenimonAttrapes)
+                    {
+                        ++indexFleche;
+                    }
+                    infos = choisirGuerison(indexFleche);
                 }
-                infos = choisirGuerison(indexFleche);
-            }
-            else if (touche == '4')
-            {
-                #ifdef _WIN32
-                        system("cls");
-                #endif
-                afficherMenuGeniedex(true);
-                operationFinie = true;
-            }
-            else if (touche == '1')
-            {
-                if (genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].getPV() == genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].pvMax)
-                {
-                    cout << "Le Genimon choisi n'a subi auncun degats. Veuillez en choisir un autre ou annuler la guerison" << endl;
-                }
-                else
-                {
-                    genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].setPV(genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].pvMax);
-                    nbCapsuleGuerison--;
-                    cout << "Guerison effectuee" << endl;
-                    std::this_thread::sleep_for(std::chrono::seconds(2));
-                    #ifdef _WIN32
-                           system("cls");
-                    #endif
-                    afficherMenuGeniedex(true);
-                    operationFinie = true;
-                }              
             }
             else
             {
-                cout << "Touche invalide" << endl;
-            }
+                if (numBouton == 4)
+                {
+                    #ifdef _WIN32
+                             system("cls");
+                    #endif
+                    afficherMenuGeniedex(true);
+                    operationFinie = true;
+                }
+                else
+                {
+                    if (genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].getPV() == genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].pvMax)
+                    {
+                        cout << "Le Genimon choisi n'a subi auncun degats. Veuillez en choisir un autre ou annuler la guerison" << endl;
+                    }
+                    else
+                    {
+                        genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].setPV(genidex[infos.indexI].listeGenimonAttrapé[infos.indexJ].pvMax);
+                        nbCapsuleGuerison--;
+                        cout << "Guerison effectuee" << endl;
+                        std::this_thread::sleep_for(std::chrono::seconds(2));
+                        #ifdef _WIN32
+                                   system("cls");
+                        #endif
+                        afficherMenuGeniedex(true);
+                        operationFinie = true;
+                    }
+                }
+            }        
         }
     }
     else

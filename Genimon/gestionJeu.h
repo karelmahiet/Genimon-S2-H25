@@ -15,6 +15,7 @@ void gererHistorique();
 void gererPartie();
 void gererThread();
 void gererThread2();
+void gererThread3();
 
 #endif
 

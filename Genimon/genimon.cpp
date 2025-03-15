@@ -387,6 +387,9 @@ int Genimon::getGainBalles()
 
 bool Genimon::capture(int* nbBallesJoueur)
 {
+    extern bool bouton1_On;
+    extern bool bouton2_On;
+    extern int numBouton;
     bool captureReussie = false;
     bool captureFinie = false;
 
@@ -403,49 +406,40 @@ bool Genimon::capture(int* nbBallesJoueur)
         {
             cout << "Nombre de balles restantes: " << *nbBallesJoueur << endl;
             cout << "Voulez-vous le capturer? (1 pour oui et 2 pour non)" << endl;
-            bool decisionPrise = false;
-            while (!decisionPrise)
-            {
-                bool estCapturé = false;
-                char question = _getch();
-                if (question == '1') {
-                    cout << "Balle lancee!" << endl;
-                    (*nbBallesJoueur)--;
-                    int random = rand() % 20;
-                    if (random >= 0 && random < (8 + facteurChance)) {
+            while (!bouton1_On && !bouton2_On);
+
+            bool estCapturé = false;
+            if (numBouton == 1) {
+                cout << "Balle lancee!" << endl;
+                (*nbBallesJoueur)--;
+                int random = rand() % 20;
+                if (random >= 0 && random < (8 + facteurChance)) {
+                    std::this_thread::sleep_for(std::chrono::seconds(1));
+                    cout << "--1--" << endl;
+                    random = rand() % 20;
+                    if (random >= 0 && random < (10 + facteurChance)) {
                         std::this_thread::sleep_for(std::chrono::seconds(1));
-                        cout << "--1--" << endl;
+                        cout << "--2--" << endl;
                         random = rand() % 20;
-                        if (random >= 0 && random < (10 + facteurChance)) {
+                        if (random >= 0 && random < (12 + facteurChance)) {
                             std::this_thread::sleep_for(std::chrono::seconds(1));
-                            cout << "--2--" << endl;
-                            random = rand() % 20;
-                            if (random >= 0 && random < (12 + facteurChance)) {
-                                std::this_thread::sleep_for(std::chrono::seconds(1));
-                                cout << nom << " capture! Bravo" << endl;
-                                estCapturé = true;
-                                captureReussie = true;
-                                captureFinie = true;
-                                cout << endl << "-----Fin du face a face-----" << endl << endl;
-                            }
+                            cout << nom << " capture! Bravo" << endl;
+                            estCapturé = true;
+                            captureReussie = true;
+                            captureFinie = true;
+                            cout << endl << "-----Fin du face a face-----" << endl << endl;
                         }
                     }
-                    if (!estCapturé) {
-                        std::this_thread::sleep_for(std::chrono::seconds(1));
-                        cout << nom << " s'est echappe de la balle..." << endl << endl;
-                    }
-                    decisionPrise = true;
                 }
-                else if (question == '2') {
-                    cout << nom << " s'est enfuit..." << endl;
-                    cout << endl << "-----Fin du face a face-----" << endl << endl;
-                    decisionPrise = true;
-                    captureFinie = true;
+                if (!estCapturé) {
+                    std::this_thread::sleep_for(std::chrono::seconds(1));
+                    cout << nom << " s'est echappe de la balle..." << endl << endl;
                 }
-                else
-                {
-                    cout << "Touche invalide" << endl;
-                }
+            }
+            else {
+                cout << nom << " s'est enfuit..." << endl;
+                cout << endl << "-----Fin du face a face-----" << endl << endl;
+                captureFinie = true;
             }
         }
     }

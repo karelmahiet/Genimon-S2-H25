@@ -15,6 +15,18 @@ bool disparitionsPermises = false;
 bool resfreshPermis = true;
 int nbCapsulesGuerisonTerrain = 0;
 
+//Variables communication
+bool bouton1_On = false;
+bool bouton2_On = false;
+bool bouton3_On = false;
+bool bouton4_On = false;
+int numBouton = 0;
+bool joystick_On = false;
+string posJoystick = "centre";  // centre, nord, sud, est, ouest
+int accX = 0;
+int accY = 0;
+int accZ = 0;
+
 bool evenementActif() {
     time_t now = time(nullptr);
 
@@ -69,38 +81,27 @@ void gererInitialisation()
         system("cls");
     #endif
     afficherBienvenue();
-    bool operationFinie = false;
+    while (!bouton1_On && !bouton4_On);
 
-    while (!operationFinie)
+    if (numBouton == 1)
     {
-        char touche = _getch();
+        #ifdef _WIN32
+                system("cls");
+        #endif
 
-        if (touche == '1')
-        {
-            #ifdef _WIN32
-                 system("cls");
-            #endif
+        joueur = new Joueur;
+        cout << "----------------------------------------------------------------------------------" << endl;
+        cout << "                                 Setup de la partie                               " << endl;
+        cout << "----------------------------------------------------------------------------------" << endl << endl;
+        cout << "Entrez votre nom: ";
+        cin >> joueur->nom;
+        joueur->choisirStarter();
 
-            joueur = new Joueur;
-            cout << "----------------------------------------------------------------------------------" << endl;
-            cout << "                                 Setup de la partie                               " << endl;
-            cout << "----------------------------------------------------------------------------------" << endl << endl;
-            cout << "Entrez votre nom: ";
-            cin >> joueur->nom;
-            joueur->choisirStarter();
-
-            etatJeu = EnCours;
-            operationFinie = true;
-        }
-        else if (touche == '4')
-        {
-            etatJeu = Termine;
-            operationFinie = true;
-        }
-        else
-        {
-            cout << "Touche invalide" << endl;
-        }
+        etatJeu = EnCours;
+    }
+    else
+    {
+        etatJeu = Termine;
     }
 }
 
@@ -110,28 +111,13 @@ void gererPause(bool *finPartie)
         system("cls");
     #endif
     afficherPause();
-    bool operationFinie = false;
+    while (!bouton1_On && !bouton2_On && !bouton4_On);
 
-    while (!operationFinie)
-    {
-        char touche = _getch();
-
-        if (touche == '2') {
-            gererConfirmation(1, finPartie);
-            operationFinie = true;
-        }
-        else if (touche == '1') {
-            gererConfirmation(2, finPartie);
-            operationFinie = true;
-        }
-        else if (touche == '4')
-        {
-            operationFinie = true;
-        }
-        else
-        {
-            cout << "Touche invalide" << endl;
-        }
+    if (numBouton == 2) {
+        gererConfirmation(1, finPartie);
+    }
+    else if (numBouton == 1) {
+        gererConfirmation(2, finPartie);
     }
 }
 
@@ -141,36 +127,22 @@ void gererConfirmation(int option, bool* finPartie)
         system("cls");
     #endif
     afficherConfirmation();
-    bool operationFinie = false;
+    while (!bouton1_On && !bouton4_On);
 
-    while (!operationFinie)
+    if (numBouton == 1)
     {
-        char touche = _getch();
-
-        if (touche == '1')
+        if (option == 1)
         {
-            if (option == 1)
-            {
-                etatJeu = Initialise;            
-                apparitionsPermises = false;
-                disparitionsPermises = false;
-                resfreshPermis = true;
-            }
-            else
-            {
-                etatJeu = Termine;
-            }
-            *finPartie = true;
-            operationFinie = true;
-        }
-        else if (touche == '4')
-        {
-            operationFinie = true;
+            etatJeu = Initialise;
+            apparitionsPermises = false;
+            disparitionsPermises = false;
+            resfreshPermis = true;
         }
         else
         {
-            cout << "Touche invalide" << endl;
+            etatJeu = Termine;
         }
+        *finPartie = true;
     }
 }
 
@@ -180,15 +152,14 @@ void gererGeniedex()
         system("cls");
     #endif
     joueur->afficherMenuGeniedex(true);
-    bool operationFinie = false;
 
+    bool operationFinie = false;
     while (!operationFinie)
     {
-        char touche = _getch();
+        while (!bouton1_On && !bouton2_On && !bouton3_On && !bouton4_On);
 
-        if (touche == '1')
+        if (numBouton == 1)
         {
-            char toucheSecondaire;
             bool choixFait = false;
             bool refresh = true;
             int indexFleche = 0;
@@ -199,7 +170,7 @@ void gererGeniedex()
                 if (refresh)
                 {
                     #ifdef _WIN32
-                              system("cls");
+                                system("cls");
                     #endif
                     joueur->afficherMenuGeniedex(false);
                     cout << "Choissisez le type de Genimon que vous voulez visualiser (8 choix)" << endl;
@@ -215,39 +186,38 @@ void gererGeniedex()
                     }
 
                     cout << "\nAppuyez sur --1-- pour confirmer le choix" << endl;
-                }              
-                toucheSecondaire = _getch();
+                }
 
-                if (toucheSecondaire == 'w')
+                while (!joystick_On && !bouton1_On);
+
+                if (joystick_On)
                 {
-                    if (indexFleche > 0)
+                    if (posJoystick == "nord")
                     {
-                        --indexFleche;
+                        if (indexFleche > 0)
+                        {
+                            --indexFleche;
+                        }
+                        refresh = true;
                     }
-                    refresh = true;
-                }
-                else if (toucheSecondaire == 's')
-                {
-                    if (indexFleche < 7)
+                    else if (posJoystick == "sud")
                     {
-                        ++indexFleche;
+                        if (indexFleche < 7)
+                        {
+                            ++indexFleche;
+                        }
+                        refresh = true;
                     }
-                    refresh = true;
-                }
-                else if (toucheSecondaire == '1')
-                {
-                    choixFait = true;
                 }
                 else
                 {
-                    refresh = false;
-                    cout << "Touche invalide" << endl;
+                    choixFait = true;
                 }
-            }           
+            }
 
             joueur->consulterGenidexPartiel(indexFleche);
         }
-        else if (touche == '2')
+        else if (numBouton == 2)
         {
             #ifdef _WIN32
                     system("cls");
@@ -255,7 +225,7 @@ void gererGeniedex()
             joueur->afficherMenuGeniedex(false);
             joueur->consulterGenidexComplet();
         }
-        else if (touche == '3')
+        else if (numBouton == 3)
         {
             #ifdef _WIN32
                     system("cls");
@@ -263,13 +233,9 @@ void gererGeniedex()
             joueur->afficherMenuGeniedex(false);
             joueur->guerirGenimon();
         }
-        else if (touche == '4')
-        {
-            operationFinie = true;
-        }
         else
         {
-            cout << "Touche invalide" << endl;
+            operationFinie = true;
         }
     }
 }
@@ -280,96 +246,80 @@ void gererHistorique()
         system("cls");
     #endif
     joueur->consulterHistorique();
-    bool operationFinie = false;
-
-    while (!operationFinie)
-    {
-        char touche = _getch();
-
-        if (touche == '4')
-        {
-            operationFinie = true;
-        }
-        else
-        {
-            cout << "Touche invalide" << endl;
-        }
-    }
+    while (!bouton4_On);
 }
 
 void gererPartie()
 {
     joueur->afficherPartie();
     bool operationFinie = false;
-    bool toucheValide = true;
 
     while (!operationFinie)
     {
         apparitionsPermises = true;
         disparitionsPermises = true;
         resfreshPermis = true;
-        if (_kbhit())
-        {
-            char touche = _getch();
-            toucheValide = true;
 
-            if (touche == 'a' && joueur->position_x > joueur->borne_x_min) {
+        while (!bouton1_On && !bouton2_On && !bouton3_On && !bouton4_On && !joystick_On);
+
+        if (joystick_On)
+        {
+            if (posJoystick == "ouest" && joueur->position_x > joueur->borne_x_min) {
                 joueur->position_x--;
             }
-            else if (touche == 'd' && joueur->position_x < joueur->borne_x_max - 1) {
+            else if (posJoystick == "est" && joueur->position_x < joueur->borne_x_max - 1) {
                 joueur->position_x++;
             }
-            else if (touche == 's' && joueur->position_y < joueur->borne_y_max - 1) {
+            else if (posJoystick == "sud" && joueur->position_y < joueur->borne_y_max - 1) {
                 joueur->position_y++;
             }
-            else if (touche == 'w' && joueur->position_y > joueur->borne_y_min) {
+            else if (posJoystick == "nord" && joueur->position_y > joueur->borne_y_min) {
                 joueur->position_y--;
             }
-            else if (touche == '1') {
+        }
+        else
+        {
+            if (numBouton == 1) {
                 resfreshPermis = false;
                 gererGeniedex();
             }
-            else if (touche == '2') {
+            else if (numBouton == 2) {
                 resfreshPermis = false;
                 gererHistorique();
             }
-            else if (touche == '3') {
+            else if (numBouton == 3) {
                 apparitionsPermises = false;
                 disparitionsPermises = false;
                 resfreshPermis = false;
                 gererPause(&operationFinie);
             }
-            else
-            {
-                toucheValide = false;
-            }
+        }
 
-            if (joueur->estSurGenimon())
+        if (joueur->estSurGenimon())
+        {
+            disparitionsPermises = false;
+            resfreshPermis = false;
+            joueur->gererGenimon();
+        }
+        else if (joueur->estSurPorte())
+        {
+            apparitionsPermises = false;
+            disparitionsPermises = false;
+            resfreshPermis = false;
+            joueur->changerTerrain();
+        }
+        else
+        {
+            if (joueur->gererCapsuleVie())
             {
-                disparitionsPermises = false;
-                resfreshPermis = false;
-                joueur->gererGenimon();
+                nbCapsulesGuerisonTerrain--;
             }
-            else if (joueur->estSurPorte())
-            {
-                apparitionsPermises = false;
-                disparitionsPermises = false;
-                resfreshPermis = false;
-                joueur->changerTerrain();
-            }
-            else
-            {
-                if (joueur->gererCapsuleVie())
-                {
-                    nbCapsulesGuerisonTerrain--;
-                }
-            }
+        }
 
 
-            if (toucheValide && etatJeu == EnCours)
-            {
-                joueur->afficherPartie();
-            }
+        if (etatJeu == EnCours)
+        {
+            joueur->afficherPartie();
         }
     }
 
@@ -432,6 +382,64 @@ void gererThread2()
     }
 }
 
+//Gestion des commandes
+void gererThread3()
+{
+    char commande = '0';
+
+    while (true)
+    {
+        bouton1_On = false;
+        bouton2_On = false;
+        bouton3_On = false;
+        bouton4_On = false;
+        joystick_On = false;
+
+        commande = _getch();
+
+        if (commande == 'w')
+        {
+            joystick_On = true;
+            posJoystick = "nord";
+        }
+        else if (commande == 'a')
+        {
+            joystick_On = true;
+            posJoystick = "ouest";
+        }
+        else if (commande == 's')
+        {
+            joystick_On = true;
+            posJoystick = "sud";
+        }
+        else if (commande == 'd')
+        {
+            joystick_On = true;
+            posJoystick = "est";
+        }
+        else if (commande == '1')
+        {
+            bouton1_On = true;
+            numBouton = 1;
+        }
+        else if (commande == '2')
+        {
+            bouton2_On = true;
+            numBouton = 2;
+        }
+        else if (commande == '3')
+        {
+            bouton3_On = true;
+            numBouton = 3;
+        }
+        else if (commande == '4')
+        {
+            bouton4_On = true;
+            numBouton = 4;
+        }
+    }
+}
+
 int main()
 {
     srand(time(0));
@@ -439,6 +447,8 @@ int main()
     t.detach();
     thread t2(gererThread2);
     t2.detach();
+    thread t3(gererThread3);
+    t3.detach();
 
     while (true)
     {
