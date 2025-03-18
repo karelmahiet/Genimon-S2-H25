@@ -1,6 +1,38 @@
 #include "gestionJeu.h"
 #include "joueur.h"
 
+//----------Variables communication----------
+#include <iostream>
+#include <string>
+#include "SerialPort.hpp"
+#include "json.hpp"
+using json = nlohmann::json;
+using namespace std;
+
+#define BAUD 115200           // Frequence de transmission serielle
+#define MSG_MAX_SIZE 1024   // Longueur maximale d'un message
+
+bool SendToSerial(SerialPort* arduino, json j_msg);
+bool RcvFromSerial(SerialPort* arduino, string& msg);
+
+SerialPort* arduino;
+
+int accX, accY, accZ;
+string messageLCD;
+int nbSeg;
+json j_msg_send;
+
+bool bouton1_On = false;
+bool bouton2_On = false;
+bool bouton3_On = false;
+bool bouton4_On = false;
+int numBouton = 0;
+bool joystick_On = false;
+int posJoystick = 0;
+bool accelerometre_On = false;
+int posAccelerometre = 0;
+//-------------------------------------------
+//--------------Variables jeu----------------
 enum Etat
 {
     Initialise, EnCours, Termine
@@ -14,18 +46,8 @@ bool apparitionsPermises = false;
 bool disparitionsPermises = false;
 bool resfreshPermis = true;
 int nbCapsulesGuerisonTerrain = 0;
+//-------------------------------------------
 
-//Variables communication
-bool bouton1_On = false;
-bool bouton2_On = false;
-bool bouton3_On = false;
-bool bouton4_On = false;
-int numBouton = 0;
-bool joystick_On = false;
-string posJoystick = "centre";  // centre, nord, sud, est, ouest
-int accX = 0;
-int accY = 0;
-int accZ = 0;
 
 bool evenementActif() {
     time_t now = time(nullptr);
@@ -192,7 +214,7 @@ void gererGeniedex()
 
                 if (joystick_On)
                 {
-                    if (posJoystick == "nord")
+                    if (posJoystick == 1)
                     {
                         if (indexFleche > 0)
                         {
@@ -200,7 +222,7 @@ void gererGeniedex()
                         }
                         refresh = true;
                     }
-                    else if (posJoystick == "sud")
+                    else if (posJoystick == 3)
                     {
                         if (indexFleche < 7)
                         {
@@ -264,16 +286,16 @@ void gererPartie()
 
         if (joystick_On)
         {
-            if (posJoystick == "ouest" && joueur->position_x > joueur->borne_x_min) {
+            if (posJoystick == 4 && joueur->position_x > joueur->borne_x_min) {
                 joueur->position_x--;
             }
-            else if (posJoystick == "est" && joueur->position_x < joueur->borne_x_max - 1) {
+            else if (posJoystick == 2 && joueur->position_x < joueur->borne_x_max - 1) {
                 joueur->position_x++;
             }
-            else if (posJoystick == "sud" && joueur->position_y < joueur->borne_y_max - 1) {
+            else if (posJoystick == 3 && joueur->position_y < joueur->borne_y_max - 1) {
                 joueur->position_y++;
             }
-            else if (posJoystick == "nord" && joueur->position_y > joueur->borne_y_min) {
+            else if (posJoystick == 1 && joueur->position_y > joueur->borne_y_min) {
                 joueur->position_y--;
             }
         }
@@ -329,7 +351,7 @@ void gererPartie()
 }
 
 //Apparition et disparition des genimons
-void gererThread()
+void gererThread1()
 {
     while (true) {
         if (etatJeu == EnCours)
@@ -382,7 +404,7 @@ void gererThread2()
     }
 }
 
-//Gestion des commandes
+//Gestion des commandes par clavier
 void gererThread3()
 {
     char commande = '0';
@@ -400,22 +422,22 @@ void gererThread3()
         if (commande == 'w')
         {
             joystick_On = true;
-            posJoystick = "nord";
+            posJoystick = 1;
         }
         else if (commande == 'a')
         {
             joystick_On = true;
-            posJoystick = "ouest";
+            posJoystick = 4;
         }
         else if (commande == 's')
         {
             joystick_On = true;
-            posJoystick = "sud";
+            posJoystick = 3;
         }
         else if (commande == 'd')
         {
             joystick_On = true;
-            posJoystick = "est";
+            posJoystick = 2;
         }
         else if (commande == '1')
         {
@@ -440,15 +462,149 @@ void gererThread3()
     }
 }
 
+//Gestion des commandes par manette
+void gererThread4()
+{
+    while (true)
+    {
+        Sleep(100);
+
+        json j_msg_rcv; // effacer le message precedent
+        string raw_msg;
+
+        // Reception message Arduino
+        if (!RcvFromSerial(arduino, raw_msg)) {
+            //cerr << "Erreur lors de la reception du message. " << endl;
+        }
+
+        //       std::cout << "Chaine non-modifiee : " << endl << raw_msg << std::endl;
+
+        size_t pos1 = raw_msg.find('{');
+        size_t pos2 = raw_msg.find('}', pos1);
+        if (pos2 != std::string::npos && pos1 != std::string::npos) {
+            raw_msg = raw_msg.substr(pos1, pos2 + 1);
+        }
+        else {
+            raw_msg = "";
+        }
+        //        std::cout << "Chaine modifiee : " << endl << raw_msg << std::endl;
+
+
+                // Affichage du message reçu de l'Arduino
+        if (raw_msg.size() > 0) {
+            // Transfert du message en JSON
+
+            try {
+                j_msg_rcv = json::parse(raw_msg);        //ERREUR PROVIENT D'ICI
+            }
+            catch (const json::parse_error& e) {
+                //std::cerr << "Erreur de parsing : " << e.what() << std::endl;
+                //std::cout << "Json mauvais:    " << endl << raw_msg << endl;
+            }
+
+            //std::cout << "Message de l'Arduino: " << j_msg_rcv << endl;
+
+            if (j_msg_rcv.contains("boutton")) {
+                numBouton = j_msg_rcv["boutton"];
+                if (numBouton == 1)
+                {
+                    bouton1_On = true;
+                }
+                else if (numBouton == 2)
+                {
+                    bouton2_On = true;
+                }
+                else if (numBouton == 3)
+                {
+                    bouton3_On = true;
+                }
+                else if (numBouton == 4)
+                {
+                    bouton4_On = true;
+                }
+            }
+            if (j_msg_rcv.contains("JoyPosition")) {
+                posJoystick = j_msg_rcv["JoyPosition"];
+                if (posJoystick != 0)
+                {
+                    joystick_On = true;
+                }
+            }
+
+            if (j_msg_rcv.contains("AccX")) {
+                accX = j_msg_rcv["AccX"];
+            }
+            if (j_msg_rcv.contains("AccY")) {
+                accY = j_msg_rcv["AccY"];
+            }
+            if (j_msg_rcv.contains("AccZ")) {
+                accZ = j_msg_rcv["AccZ"];
+            }
+
+            bouton1_On = false;
+            bouton2_On = false;
+            bouton3_On = false;
+            bouton4_On = false;
+            joystick_On = false;
+
+            Sleep(100);
+
+            /*system("cls");
+            cout << "bouton: " << numBouton << endl;
+            cout << "joystick: " << posJoystick << endl << endl;
+
+            if (numBouton == 1) nbSeg = 1;
+            if (numBouton == 2) nbSeg = 2;
+            if (numBouton == 3) nbSeg = 3;
+            if (numBouton == 4) nbSeg = 4;
+            if (numBouton == 0) nbSeg = 0;*/
+
+            //Affichage sur le 7-segments
+            if (etatJeu == EnCours)
+            {
+                nbSeg = joueur->getNbCapsuleGuerison();
+            }
+            else
+            {
+                nbSeg = 0;
+            }
+
+            // Envoie message Arduino
+            j_msg_send["messageLCD"] = messageLCD;
+            j_msg_send["nbSeg"] = nbSeg;
+
+            if (!SendToSerial(arduino, j_msg_send)) {          //ENVOI DE DONNEES
+                //cerr << "Erreur lors de l'envoie du message. " << endl;
+            }
+        }
+    }
+}
+
 int main()
 {
+    //--------Initialisation du port de communication----------
+    string com = "\\\\.\\COM3";
+    arduino = new SerialPort(com.c_str(), BAUD);
+
+    if (!arduino->isConnected()) {
+        cerr << "Impossible de se connecter au port " << string(com) << ". Fermeture du programme!" << endl;
+        exit(1);
+    }
+
+    accX = 0, accY = 0, accZ = 0;
+    messageLCD = "CA FONCTIONNE";  // Message à afficher sur le LCD
+    nbSeg = 5;  // Nombre à afficher sur le 7 segments
+    //-----------------------------------------------------------
+
     srand(time(0));
-    thread t(gererThread);
+    thread t(gererThread1);
     t.detach();
     thread t2(gererThread2);
     t2.detach();
-    thread t3(gererThread3);
-    t3.detach();
+    //thread t3(gererThread3);
+    //t3.detach();
+    thread t4(gererThread4);
+    t4.detach();
 
     while (true)
     {
@@ -471,5 +627,30 @@ int main()
     }
 
     return 0;
+}
+
+//Fonctions de communcation
+bool SendToSerial(SerialPort* arduino, json j_msg) {
+    // Return 0 if error
+    string msg = j_msg.dump();
+    bool ret = arduino->writeSerialPort(msg.c_str(), msg.length());
+    return ret;
+}
+
+bool RcvFromSerial(SerialPort* arduino, string& msg) {
+    // Return 0 if error
+    // Message output in msg
+    string str_buffer;
+    char char_buffer[MSG_MAX_SIZE];
+    int buffer_size;
+
+    msg.clear(); // clear string
+
+    // Version fonctionnelle dans VScode et Visual Studio
+    buffer_size = arduino->readSerialPort(char_buffer, MSG_MAX_SIZE);
+    str_buffer.assign(char_buffer, buffer_size);
+    msg.append(str_buffer);
+
+    return true;
 }
 

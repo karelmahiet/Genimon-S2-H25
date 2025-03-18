@@ -52,6 +52,7 @@ public:
 	bool gererCapsuleVie();
 	void creerCapsuleVie(bool refresh);
 	void guerirGenimon();
+	int getNbCapsuleGuerison();
 	int position_x;
 	int position_y;
 	int anciennePosition_x;

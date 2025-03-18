@@ -195,7 +195,7 @@ bool Joueur::estSurPorte()
 
 bool Joueur::gererCapsuleVie()
 {
-    if (terrain[position_x][position_y] == 'V')
+    if (terrain[position_x][position_y] == 'V' && nbCapsuleGuerison < 9)
     {
         nbCapsuleGuerison++;
         terrain[position_x][position_y] == '.';
@@ -205,6 +205,11 @@ bool Joueur::gererCapsuleVie()
     {
         return false;
     }
+}
+
+int Joueur::getNbCapsuleGuerison()
+{
+    return nbCapsuleGuerison;
 }
 
 void Joueur::ajouterGenimon(bool refresh)
@@ -374,7 +379,7 @@ bool Joueur::gererCombat(Genimon* genimon)
     extern bool bouton4_On;
     extern bool joystick_On;
     extern int numBouton;
-    extern string posJoystick;
+    extern int posJoystick;
     bool victoire = false;
 
     //Partie choix
@@ -390,7 +395,7 @@ bool Joueur::gererCombat(Genimon* genimon)
 
         if (joystick_On)
         {
-            if (posJoystick == "nord")
+            if (posJoystick == 1)
             {
                 if (indexFleche > 1)
                 {
@@ -398,7 +403,7 @@ bool Joueur::gererCombat(Genimon* genimon)
                 }
                 infos = choisirGenimon(genimon, indexFleche);
             }
-            else if (posJoystick == "sud")
+            else if (posJoystick == 3)
             {
                 if (indexFleche < nbGenimonAttrapes)
                 {
@@ -1008,7 +1013,7 @@ void Joueur::guerirGenimon()
     extern bool bouton4_On;
     extern bool joystick_On;
     extern int numBouton;
-    extern string posJoystick;
+    extern int posJoystick;
 
     bool operationFinie = false;
     int indexFleche = 1;
@@ -1023,7 +1028,7 @@ void Joueur::guerirGenimon()
 
             if (joystick_On)
             {
-                if (posJoystick == "nord")
+                if (posJoystick == 1)
                 {
                     if (indexFleche > 1)
                     {
@@ -1031,7 +1036,7 @@ void Joueur::guerirGenimon()
                     }
                     infos = choisirGuerison(indexFleche);
                 }
-                else if (posJoystick == "sud")
+                else if (posJoystick == 3)
                 {
                     if (indexFleche < nbGenimonAttrapes)
                     {

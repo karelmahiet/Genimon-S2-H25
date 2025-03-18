@@ -13,9 +13,10 @@ void gererConfirmation(int option, bool* finPartie);
 void gererGeniedex();
 void gererHistorique();
 void gererPartie();
-void gererThread();
+void gererThread1();
 void gererThread2();
 void gererThread3();
+void gererThread4();
 
 #endif
 
